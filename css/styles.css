@@ -467,54 +467,96 @@ a.source-link:hover { background: var(--raised); }
 }
 .freq { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--text-2); }
 
-/* On-air countdown sign on the gut call. The warning is one state change,
-   never a pulse or blink. */
+/*
+  Neon "ON AIR" countdown sign on the gut call. This is the one place on the
+  site that glows, on purpose. It stays lit, flickers in the last 5 seconds,
+  and goes dark at 0. Flicker dips dim the tube instead of switching it off,
+  and never more than twice a second, to stay well clear of flash limits.
+*/
 .on-air {
-  align-self: flex-start;
-  display: inline-flex;
+  --tube: #ffcf5c;
+  --tube-core: #fff1c9;
+  --glow-near: rgba(255, 166, 64, 0.9);
+  --glow-far: rgba(255, 72, 40, 0.45);
+  --tube-off: #3d3731;
+  align-self: stretch;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid var(--hairline-strong);
-  border-radius: 8px;
-  background: #0d0c0b;
-  transition: border-color 180ms var(--ease);
+  justify-content: space-between;
+  gap: 16px;
 }
-.on-air-lamp {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text);
+
+.neon-sign {
+  display: inline-flex;
+  padding: 8px 20px;
+  border: 3px solid var(--tube);
+  border-radius: 12px;
+  background: #140d0a;
+  box-shadow:
+    0 0 2px var(--tube-core),
+    0 0 10px var(--glow-near),
+    0 0 28px var(--glow-far),
+    inset 0 0 10px var(--glow-near),
+    inset 0 0 24px var(--glow-far);
 }
-.on-air-label {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
-  color: var(--text);
+.neon-text {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tube-core);
+  text-shadow:
+    0 0 2px var(--tube-core),
+    0 0 8px var(--tube),
+    0 0 16px var(--glow-near),
+    0 0 32px var(--glow-far);
 }
+
 .on-air-count {
-  margin-left: 8px;
-  padding-left: 12px;
-  border-left: 1px solid var(--hairline-strong);
   display: inline-flex;
   align-items: baseline;
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   color: var(--text);
 }
-.on-air-count strong { font-size: 18px; line-height: 24px; font-weight: 500; }
+.on-air-count strong { font-size: 28px; line-height: 32px; font-weight: 500; }
 .on-air-unit { font-size: 12px; line-height: 16px; color: var(--muted); }
 
-.on-air[data-state="warning"] { border-color: var(--accent); }
-.on-air[data-state="warning"] .on-air-lamp,
-.on-air[data-state="warning"] .on-air-label,
-.on-air[data-state="warning"] .on-air-count { color: var(--accent); background-color: transparent; }
-.on-air[data-state="warning"] .on-air-lamp { background: var(--accent); }
-.on-air[data-state="warning"] .on-air-count strong { font-size: 28px; line-height: 32px; }
+/* Last 5 seconds: the tube flickers, faster in the final 2 seconds */
+.on-air[data-state="warning"] .on-air-count { color: var(--accent); }
+.on-air[data-flicker="slow"] .neon-sign { animation: neon-flicker-slow 2s steps(1, end) infinite; }
+.on-air[data-flicker="fast"] .neon-sign { animation: neon-flicker-fast 1s steps(1, end) infinite; }
 
-.on-air[data-state="off"] .on-air-lamp { background: var(--hairline-strong); }
-.on-air[data-state="off"] .on-air-label,
+@keyframes neon-flicker-slow {
+  0%, 58% { opacity: 1; }
+  60% { opacity: 0.35; }
+  64% { opacity: 1; }
+  80% { opacity: 0.55; }
+  84%, 100% { opacity: 1; }
+}
+@keyframes neon-flicker-fast {
+  0%, 18% { opacity: 1; }
+  20% { opacity: 0.3; }
+  28% { opacity: 1; }
+  66% { opacity: 0.4; }
+  74%, 100% { opacity: 1; }
+}
+
+/* At 0 the tube goes dark */
+.on-air[data-state="off"] .neon-sign {
+  border-color: var(--tube-off);
+  background: #12110f;
+  box-shadow: none;
+  animation: none;
+}
+.on-air[data-state="off"] .neon-text { color: var(--tube-off); text-shadow: none; }
 .on-air[data-state="off"] .on-air-count { color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .on-air[data-flicker] .neon-sign { animation: none; }
+  .on-air[data-state="warning"] .neon-sign { opacity: 0.7; }
+}
 
 /* Score readout on the results screen */
 .score-panel {

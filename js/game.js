@@ -128,6 +128,12 @@
     return timeLeft <= WARNING_SECONDS ? 'warning' : 'live';
   }
 
+  // The neon tube flickers through the warning, faster in the last 2 seconds.
+  function onAirFlicker(timeLeft) {
+    if (timeLeft <= 0 || timeLeft > WARNING_SECONDS) return 'none';
+    return timeLeft <= 2 ? 'fast' : 'slow';
+  }
+
   function updateTimer(remaining, duration) {
     state.timeLeft = Math.ceil(remaining / 1000);
     const count = document.getElementById('time-left');
@@ -139,7 +145,8 @@
     if (sign) {
       const status = onAirState(state.timeLeft);
       sign.dataset.state = status;
-      if (label) label.textContent = status === 'off' ? 'Off air' : 'On air';
+      sign.dataset.flicker = onAirFlicker(state.timeLeft);
+      if (label) label.setAttribute('aria-label', status === 'off' ? 'Off air' : 'On air');
     }
   }
 
@@ -323,9 +330,8 @@
   function gutScreen(story) {
     return `
       <section class="screen">
-        <div id="on-air" class="on-air" data-state="${onAirState(state.timeLeft)}" role="timer" aria-label="Seconds left for your gut call">
-          <span class="on-air-lamp" aria-hidden="true"></span>
-          <span id="on-air-label" class="on-air-label">On air</span>
+        <div id="on-air" class="on-air" data-state="${onAirState(state.timeLeft)}" data-flicker="${onAirFlicker(state.timeLeft)}" role="timer" aria-label="Seconds left for your gut call">
+          <span class="neon-sign"><span id="on-air-label" class="neon-text" aria-label="On air">On air</span></span>
           <span class="on-air-count"><strong id="time-left">${state.timeLeft}</strong><span class="on-air-unit">s</span></span>
         </div>
         ${story.sample ? '<span class="tag">Sample story</span>' : ''}
