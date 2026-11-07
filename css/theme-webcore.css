@@ -1,7 +1,7 @@
 /*
-  Experimental "webcore" theme: a late-90s desktop look. Opt in with
-  ?theme=webcore (see js/theme.js). Every rule is scoped to
-  html[data-theme="webcore"], so the default look is untouched. This theme
+  "Webcore" theme: a late-90s desktop look, and the default. Switch to the
+  dark look with ?theme=dark (see js/theme.js). Every rule is scoped to
+  html[data-theme="webcore"], so the dark look in styles.css stays intact. This theme
   deliberately breaks the Unslop rules (gradients, bevels, gradient text);
   delete this file and its <link> to drop the experiment.
 */

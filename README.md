@@ -25,7 +25,7 @@ All stories, sources and scoring live in [`js/data.js`](js/data.js). The current
 
 ## Themes
 
-An experimental retro desktop theme lives in [`css/theme-webcore.css`](css/theme-webcore.css). Add `?theme=webcore` to the URL to try it, for example https://jz6424.github.io/ProductGames2026/?theme=webcore. The choice is remembered on that device, so use `?theme=default` to switch back. To drop the experiment, delete the file, its `<link>` in `index.html`, and `js/theme.js`.
+The default look is a retro desktop theme in [`css/theme-webcore.css`](css/theme-webcore.css), layered on top of the dark radio-booth look in [`css/styles.css`](css/styles.css). Add `?theme=dark` to the URL to see the dark look, for example https://jz6424.github.io/ProductGames2026/?theme=dark, and `?theme=webcore` to switch back. The choice is remembered on that device. To go back to dark as the default, remove `data-theme="webcore"` from the `<html>` tag in `index.html` and change the last lines of [`js/theme.js`](js/theme.js).
 
 ## Scoring
 
