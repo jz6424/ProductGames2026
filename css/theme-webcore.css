@@ -20,8 +20,8 @@ html[data-theme="webcore"] {
   --accent-surface: #000080;
   --pos: #006b00;
   --neg: #b00000;
-  --font-body: Tahoma, Verdana, 'Segoe UI', sans-serif;
-  --font-mono: Tahoma, Verdana, 'Segoe UI', sans-serif;
+  --font-body: 'Pixelify Sans', Tahoma, Verdana, sans-serif;
+  --font-mono: 'Pixelify Sans', Tahoma, Verdana, sans-serif;
   --font-title: 'Trebuchet MS', 'Lucida Grande', Tahoma, sans-serif;
   --font-lcd: 'VT323', 'Courier New', monospace;
   --title-shadow: 1px 1px 0 #0a1a5c;
@@ -35,7 +35,13 @@ html[data-theme="webcore"] {
 
 /* ---------- Desktop and window ---------- */
 
-html[data-theme="webcore"] body { background: var(--page); }
+/* Pixel body text: switch off smoothing so the pixel edges stay crisp */
+html[data-theme="webcore"] body {
+  background: var(--page);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+}
 html[data-theme="webcore"] a { color: #0000ee; text-decoration-color: currentColor; }
 html[data-theme="webcore"] button:focus-visible,
 html[data-theme="webcore"] a:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
@@ -79,7 +85,7 @@ html[data-theme="webcore"] .phone::after {
   html[data-theme="webcore"] .phone { border-radius: 0; }
   /* Taskbar along the bottom of the desktop */
   html[data-theme="webcore"] body::after {
-    content: "Static   |   88.1  96.5  104.3 FM   |   Seattle";
+    content: "Static   |   88.1  91.5  96.5  100.7  104.3 FM   |   Seattle";
     position: fixed;
     left: 0;
     right: 0;

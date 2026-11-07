@@ -2,7 +2,7 @@
 
 A daily news game prototype for the "Reimagining News for Gen Z" challenge. Players read a short story card, make a quick gut call, see one new piece of evidence, then lock in a final call with a confidence level. They get their score right away.
 
-Each day has three stories: local (Seattle), national, and global. The results screen shows the total, a combined National + Global score compared with other players, and a "Learn more" page of sources for each story.
+Each day has five stories: two local (Seattle), two national, and one global. The results screen shows the total, a combined National + Global score compared with other players, and a "Learn more" page of sources for each story.
 
 ## Run it
 
@@ -16,7 +16,7 @@ Then go to http://localhost:4173.
 
 ## Edit the content
 
-All stories, sources and scoring live in [`js/data.js`](js/data.js). The current stories are real news from the week of November 3, 2026: the Seattle transit measure, the youth share of the midterm vote, and Turkey's defense pact vote. Their outcomes come from early counts, so check them against official results before presenting. For each story you can set:
+All stories, sources and scoring live in [`js/data.js`](js/data.js). The current stories are real news from the week of November 3, 2026: the Seattle transit measure, the Ballard light rail timeline, the youth share of the midterm vote, California's housing bond, and Turkey's defense pact vote. Their outcomes come from early counts, so check them against official results before presenting. For each story you can set:
 
 - `setup`, `question`, `evidence` and `outcome`: the text players see at each step.
 - `answer`: `"yes"` or `"no"`.

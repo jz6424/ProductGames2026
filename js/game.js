@@ -371,7 +371,7 @@
             <span class="city">${esc(DATA.city)}</span>
           </div>
           <h1>Guess how real news stories turned out</h1>
-          <p class="muted">You get a score right after each story, and a full round takes about three minutes</p>
+          <p class="muted">You get a score right after each story, and a full round takes about five minutes</p>
           <div class="spacer"></div>
           <button type="button" class="primary" data-action="start">Start today's game</button>
           <p class="footnote">Real stories from the week of Nov 3, 2026, with sample crowd data</p>

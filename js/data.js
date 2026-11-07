@@ -52,6 +52,30 @@ window.STATIC_DATA = {
       ]
     },
     {
+      id: 'ballard-light-rail',
+      scope: 'local',
+      scopeLabel: 'Local · Seattle',
+      frequency: '91.5',
+      sample: false,
+      teaser: 'When will light rail reach Ballard?',
+      setup: 'Sound Transit is planning a light rail line from downtown Seattle to Ballard, part of the regional transit expansion voters approved in 2016. The agency recently updated its timeline for the project.',
+      question: 'Does the latest timeline have the Ballard line opening before 2040?',
+      evidence: 'Sound Transit is looking for ways to borrow billions more dollars to cover a large budget shortfall.',
+      evidenceSource: { title: 'The Chronicle: how Sound Transit seeks to borrow more money', url: 'https://www.chronline.com/stories/how-sound-transit-seeks-to-borrow-more-money-avoid-more-delays,411298' },
+      answer: 'no',
+      outcome: 'The latest update says the line from Market Street to Seattle Center will not open until 2042.',
+      why: 'Construction from SODO to Seattle Center is funded, but the Ballard section is not yet. Public comment on the draft environmental review opens December 11.',
+      sampleCrowdYes: 0.38,
+      sources: [
+        { heading: 'Official record', links: [{ title: 'Sound Transit news releases', url: 'https://www.soundtransit.org/get-to-know-us/news-events/news-releases' }] },
+        { heading: 'News reports', links: [
+          { title: 'KOMO: Ballard extension pushed to 2042', url: 'https://komonews.com/news/local/sound-transit-link-light-rail-ballard-extension-delay-2042-2060-community-meeting-opening-funding-board-budget-deficit-market-street-to-seattle-center' },
+          { title: 'Railway Gazette: consultation begins in December', url: 'https://www.railwaygazette.com/usa/2026/11/05/seattle-light-rail-extension-consultation-to-begin-in-december/' },
+          { title: 'The Chronicle: how Sound Transit seeks to borrow more money', url: 'https://www.chronline.com/stories/how-sound-transit-seeks-to-borrow-more-money-avoid-more-delays,411298' }
+        ] }
+      ]
+    },
+    {
       id: 'youth-vote-share',
       scope: 'national',
       scopeLabel: 'National',
@@ -75,6 +99,29 @@ window.STATIC_DATA = {
         { heading: 'News reports', links: [
           { title: 'Yahoo News: youth turnout and the economy', url: 'https://www.yahoo.com/news/politics/articles/young-people-turned-near-record-133218725.html' },
           { title: 'Axios: Gen Z voters in the 2026 midterms', url: 'https://www.axios.com/2026/11/05/gen-z-voters-2026-midterms-democrats-house' }
+        ] }
+      ]
+    },
+    {
+      id: 'california-housing-bonds',
+      scope: 'national',
+      scopeLabel: 'National · California',
+      frequency: '100.7',
+      sample: false,
+      teaser: 'California votes on $11.25 billion for housing',
+      setup: 'California voters are deciding on Proposition 1, which would let the state borrow $11.25 billion through bonds for housing assistance. Supporters say it would fund more affordable housing. Opponents point to the debt the state would take on.',
+      question: 'Did it pass?',
+      evidence: 'In March 2024, California voters approved a different housing and mental health bond, also called Proposition 1, by a very narrow margin.',
+      evidenceSource: { title: 'Prior 2024 bond result (verify before presenting)', url: null },
+      answer: 'yes',
+      outcome: 'Voters approved it, letting the state borrow $11.25 billion for housing assistance.',
+      why: 'The state gets a large pool of money for housing programs, along with a debt it has to repay.',
+      sampleCrowdYes: 0.6,
+      sources: [
+        { heading: 'Official record', links: [{ title: 'NBC Los Angeles: California proposition results', url: 'https://www.nbclosangeles.com/elections/2026-california-ballot-propositions-election-results/3961904/' }] },
+        { heading: 'News reports', links: [
+          { title: 'Quartz: 6 tax and housing measures on the 2026 ballot', url: 'https://qz.com/2026-ballot-measures-tax-housing-wunc' },
+          { title: 'Ballotpedia: 2026 ballot measures', url: 'https://ballotpedia.org/2026_ballot_measures' }
         ] }
       ]
     },

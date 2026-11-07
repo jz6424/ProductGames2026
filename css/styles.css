@@ -148,6 +148,7 @@ p { margin: 0; }
   cursor: pointer;
 }
 .ghost:hover { background: #2e2b27; }
+.ghost { white-space: nowrap; flex-shrink: 0; }
 .ghost.wide { min-height: 48px; border-radius: 10px; }
 .ghost.back { align-self: flex-start; }
 
