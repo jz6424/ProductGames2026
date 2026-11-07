@@ -234,7 +234,9 @@ p { margin: 0; }
 /* ---------- Round header ---------- */
 
 .round-header { padding: 20px 20px 0; display: flex; flex-direction: column; gap: 12px; }
-.faceplate { display: flex; align-items: center; gap: 12px; }
+/* Fixed height, so a station label that wraps onto two lines doesn't push
+   the wave down on some stories and not others. */
+.faceplate { display: flex; align-items: center; gap: 12px; height: 56px; }
 .station { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .station .scope { color: var(--text); }
 .round-meta { font-size: 12px; line-height: 16px; color: var(--muted); }

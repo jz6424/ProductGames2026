@@ -74,16 +74,20 @@ html[data-theme="webcore"] .window-close {
   width: 20px;
   height: 18px;
   padding: 0;
-  border: 0;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
   display: grid;
   place-items: center;
-  background: #c0c0c0;
-  box-shadow: var(--bevel-out);
-  color: #000000;
+  /* Red close box with a glossy top and darker base, like the reference title bars */
+  background: linear-gradient(#f08a6c, #d9442a 45%, #b52a14);
+  box-shadow: inset 0 0 0 1px rgba(120, 20, 0, 0.35), 0 1px 0 rgba(0, 0, 0, 0.25);
+  color: #ffffff;
   font: 700 14px/1 Tahoma, Verdana, sans-serif;
+  text-shadow: 0 1px 0 rgba(90, 10, 0, 0.6);
   cursor: pointer;
 }
-html[data-theme="webcore"] .window-close:active { box-shadow: var(--bevel-in); }
+html[data-theme="webcore"] .window-close:hover { background: linear-gradient(#f59c80, #e2553a 45%, #c23419); }
+html[data-theme="webcore"] .window-close:active { background: linear-gradient(#b52a14, #c8381f); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4); }
 /* A bigger invisible hit area, since the drawn box is small */
 html[data-theme="webcore"] .window-close::before { content: ""; position: absolute; inset: -12px; }
 
@@ -481,6 +485,8 @@ html[data-theme="webcore"] .gut-actions { background: #c0c0c0; box-shadow: 0 -1p
   html[data-theme="webcore"] .choice { min-height: 48px; }
 }
 
+html[data-theme="webcore"] .faceplate { height: 52px; }
+
 /* ---------- Home station chips ---------- */
 
 /* Level headings are small raised tags; frequencies are tiny green LCDs */
@@ -594,6 +600,9 @@ html[data-theme="webcore"] .ranked-title { font-weight: 400; color: #000000; }
 @media (min-width: 900px) {
   /* The title bar spans both columns of the round layout */
   html[data-theme="webcore"] .phone.in-round::before { grid-column: 1 / -1; }
+  /* Keep the title bar row its natural height so extra space goes to the
+     content row, not above the radio panel (which made the wave jump). */
+  html[data-theme="webcore"] .phone.in-round { grid-template-rows: auto 1fr; }
   html[data-theme="webcore"] .phone.in-round .round-header {
     border-right: 1px solid #808080;
     box-shadow: 1px 0 #ffffff;

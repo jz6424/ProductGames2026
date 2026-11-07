@@ -485,7 +485,9 @@
   }
 
   function roundHeader(story) {
-    const current = STEPS.findIndex((s) => s[0] === state.screen);
+    // On the reveal every step is done, so the step bar stays and the radio
+    // panel keeps the same height on every screen of a round.
+    const current = state.screen === 'reveal' ? STEPS.length : STEPS.findIndex((s) => s[0] === state.screen);
     const level = SIGNAL_LEVEL[state.screen] || 4;
     const steps = current === -1 ? '' : `
       <ol class="steps" aria-label="Round progress">
