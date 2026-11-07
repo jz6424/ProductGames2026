@@ -200,7 +200,89 @@ p { margin: 0; }
 
 .home { padding-top: 32px; gap: 20px; }
 .brand-row { display: flex; justify-content: space-between; align-items: baseline; }
-.brand { font-size: 18px; line-height: 1; font-weight: 600; }
+/*
+  Logo: "Static" tunes in. It starts blurred and split into offset red and
+  cyan slices like a weak channel, jitters, then locks into a clean word.
+  Hovering replays it. A short signal wave scrolls underneath.
+*/
+.brand { position: relative; display: inline-flex; flex-direction: column; gap: 4px; cursor: default; }
+.brand-word {
+  position: relative;
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 600;
+  animation: tune-word 1.2s steps(10, end) both;
+}
+.brand-word::before,
+.brand-word::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: none;
+}
+.brand-word::before { color: #ff3b5c; clip-path: inset(8% 0 52% 0); animation: tune-slice-a 1.2s steps(10, end) both; }
+.brand-word::after { color: #3be0ff; clip-path: inset(52% 0 8% 0); animation: tune-slice-b 1.2s steps(10, end) both; }
+.brand:hover .brand-word { animation-name: tune-word-again; }
+.brand:hover .brand-word::before { animation-name: tune-slice-a-again; }
+.brand:hover .brand-word::after { animation-name: tune-slice-b-again; }
+
+.brand-wave { display: block; width: 100%; height: 8px; overflow: hidden; }
+.brand-wave path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  animation: brand-wave-scroll 2.4s linear infinite;
+}
+
+@keyframes tune-word {
+  0% { opacity: 0.35; filter: blur(1.5px); transform: skewX(-10deg) translateX(-2px); }
+  40% { opacity: 0.6; filter: blur(1px); transform: skewX(6deg) translateX(2px); }
+  70% { opacity: 0.9; filter: blur(0.4px); transform: skewX(-2deg); }
+  100% { opacity: 1; filter: none; transform: none; }
+}
+@keyframes tune-slice-a {
+  0% { opacity: 1; transform: translateX(-7px); }
+  30% { transform: translateX(5px); }
+  60% { opacity: 0.8; transform: translateX(-2px); }
+  100% { opacity: 0; transform: none; }
+}
+@keyframes tune-slice-b {
+  0% { opacity: 1; transform: translateX(7px); }
+  30% { transform: translateX(-5px); }
+  60% { opacity: 0.8; transform: translateX(2px); }
+  100% { opacity: 0; transform: none; }
+}
+/* Copies under new names so hovering restarts the effect */
+@keyframes tune-word-again {
+  0% { opacity: 0.35; filter: blur(1.5px); transform: skewX(-10deg) translateX(-2px); }
+  40% { opacity: 0.6; filter: blur(1px); transform: skewX(6deg) translateX(2px); }
+  70% { opacity: 0.9; filter: blur(0.4px); transform: skewX(-2deg); }
+  100% { opacity: 1; filter: none; transform: none; }
+}
+@keyframes tune-slice-a-again {
+  0% { opacity: 1; transform: translateX(-7px); }
+  30% { transform: translateX(5px); }
+  60% { opacity: 0.8; transform: translateX(-2px); }
+  100% { opacity: 0; transform: none; }
+}
+@keyframes tune-slice-b-again {
+  0% { opacity: 1; transform: translateX(7px); }
+  30% { transform: translateX(-5px); }
+  60% { opacity: 0.8; transform: translateX(2px); }
+  100% { opacity: 0; transform: none; }
+}
+@keyframes brand-wave-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-20px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-word, .brand-word::before, .brand-word::after, .brand-wave path { animation: none; }
+}
 .city { font-size: 14px; color: var(--text-2); }
 .home h1 { font-size: 36px; line-height: 1.05; letter-spacing: -0.02em; }
 .home h1 + p { font-size: 16px; line-height: 24px; }
