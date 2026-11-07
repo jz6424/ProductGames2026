@@ -6,7 +6,7 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let state = freshState();
-  let timerId = null;
+  let timer = null;
 
   function freshState() {
     return {
@@ -86,37 +86,45 @@
     render();
   }
 
+  // The countdown and the bar both read one deadline on every tick, so the bar
+  // empties exactly as the count reaches 0. The round ends on the tick after
+  // the empty bar and the 0 are drawn, never before.
   function startTimer() {
     stopTimer();
-    state.timeLeft = DATA.gutSeconds;
-    timerId = window.setInterval(() => {
-      state.timeLeft -= 1;
-      updateTimer();
-      if (state.timeLeft <= 0) {
+    const duration = DATA.gutSeconds * 1000;
+    const startedAt = performance.now();
+    let drawnEmpty = false;
+    timer = window.setInterval(() => {
+      if (drawnEmpty) {
         stopTimer();
         go({ gut: null, final: null, screen: 'evidence' });
+        return;
       }
-    }, 1000);
+      const remaining = Math.max(0, duration - (performance.now() - startedAt));
+      updateTimer(remaining, duration);
+      drawnEmpty = remaining === 0;
+    }, 50);
   }
 
   function stopTimer() {
-    if (timerId !== null) {
-      window.clearInterval(timerId);
-      timerId = null;
+    if (timer !== null) {
+      window.clearInterval(timer);
+      timer = null;
     }
   }
 
-  function updateTimer() {
+  function updateTimer(remaining, duration) {
+    state.timeLeft = Math.ceil(remaining / 1000);
     const count = document.getElementById('time-left');
     const bar = document.getElementById('time-bar');
-    if (count) count.textContent = String(Math.max(0, state.timeLeft));
-    if (bar) bar.style.transform = 'scaleX(' + Math.max(0, state.timeLeft) / DATA.gutSeconds + ')';
+    if (count) count.textContent = String(state.timeLeft);
+    if (bar) bar.style.transform = 'scaleX(' + remaining / duration + ')';
   }
 
   function startRound(idx) {
     // Each round starts on a fresh, noisy signal instead of easing in from the last screen.
     Object.assign(wave, WAVE_TARGETS.gut);
-    state = Object.assign({}, state, { screen: 'gut', idx, gut: null, final: null, conf: null });
+    state = Object.assign({}, state, { screen: 'gut', idx, gut: null, final: null, conf: null, timeLeft: DATA.gutSeconds });
     render();
     startTimer();
   }

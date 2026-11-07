@@ -271,7 +271,6 @@ p { margin: 0; }
   height: 100%;
   background: var(--text);
   transform-origin: left center;
-  transition: transform 1s linear;
 }
 
 /* ---------- Evidence ---------- */
@@ -359,5 +358,5 @@ a.source-link:hover { background: var(--raised); }
 
 @media (prefers-reduced-motion: reduce) {
   .screen { animation: none; }
-  .timer-bar, .primary, .ghost, .choice, .confidence, .source-link { transition: none; }
+  .primary, .ghost, .choice, .confidence, .source-link { transition: none; }
 }

@@ -25,7 +25,7 @@ All stories, sources and scoring live in [`js/data.js`](js/data.js). The current
 
 ## Scoring
 
-- Gut call: +20 if right, 0 if wrong or if the 10-second timer runs out.
+- Gut call: +20 if right, 0 if wrong or if the 15-second timer runs out.
 - Final call: Leaning +36 / −44, Confident +75 / −125, Certain +96 / −224.
 
 The score distribution on the results screen uses sample data from `sampleDistribution` in `js/data.js`.

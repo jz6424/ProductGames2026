@@ -4,7 +4,7 @@
 // Crowd percentages and the score distribution are SAMPLE data.
 window.STATIC_DATA = {
   city: 'Seattle',
-  gutSeconds: 10,
+  gutSeconds: 15,
   gutPoints: 20,
 
   // Points for the final call, by confidence level.
