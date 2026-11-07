@@ -229,7 +229,7 @@
         <p class="muted small">See where your score lands among other players.</p>
         <div class="spacer"></div>
         <button type="button" class="primary" data-action="start">Play today's broadcast</button>
-        <p class="footnote">Prototype with sample stories</p>
+        <p class="footnote">Real stories from the week of Nov 3, 2026, with sample crowd data</p>
       </section>`;
   }
 

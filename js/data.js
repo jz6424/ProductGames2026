@@ -1,5 +1,7 @@
 // Game content for Static. Edit this file to change stories, sources and scoring.
-// Every story here is a SAMPLE written for the prototype, not real news.
+// Stories are real news from the week of November 3, 2026. Outcomes were taken from
+// early, uncertified counts: check them against official results before presenting.
+// Crowd percentages and the score distribution are SAMPLE data.
 window.STATIC_DATA = {
   city: 'Seattle',
   gutSeconds: 10,
@@ -22,63 +24,81 @@ window.STATIC_DATA = {
 
   stories: [
     {
-      id: 'seattle-rent-cap',
+      id: 'seattle-transit-measure',
       scope: 'local',
       scopeLabel: 'Local · Seattle',
-      sample: true,
-      teaser: 'Seattle City Council votes on a rent cap',
-      setup: 'Seattle City Council is voting on a rent cap. Tenant groups say it would keep housing affordable. Landlords say it could reduce the supply of rentals.',
-      question: 'Did it pass?',
-      evidence: 'The city attorney warned of a possible legal challenge, and two undecided members asked for changes before the vote.',
-      evidenceSource: { title: 'Sample source', url: null },
+      sample: false,
+      teaser: 'Seattle votes on renewing its transit tax',
+      setup: 'Seattle\'s transit measure is up for renewal on the November 3 ballot. The new version would double the city\'s transit sales tax from 0.15% to 0.3%, raising about $138 million a year.',
+      question: 'Did voters approve it?',
+      evidence: 'The City Council voted 9 to 0 to put the measure on the ballot.',
+      evidenceSource: { title: 'City of Seattle: transit measure renewal', url: 'https://www.seattle.gov/transportation/projects-and-programs/programs/transit-program/seattle-transit-measure/renewal' },
       answer: 'yes',
-      outcome: 'It passed 6 to 3, but only for buildings with more than 20 units.',
-      why: 'Smaller buildings are exempt, so the cap would cover only some Seattle renters.',
-      sampleCrowdYes: 0.41,
+      outcome: 'More than 72% of votes were in favor as of Thursday\'s count. Results are not yet certified.',
+      why: 'Shoppers in Seattle will pay a slightly higher sales tax, and the money goes to city transit service.',
+      sampleCrowdYes: 0.68,
       sources: [
-        { heading: 'Official record', links: [{ title: 'City Council vote record', url: null }] },
-        { heading: 'News reports', links: [{ title: 'Local news article', url: null }, { title: 'Regional news article', url: null }] },
-        { heading: 'Competing views', links: [{ title: 'Tenant group statement', url: null }, { title: 'Landlord association statement', url: null }] }
+        { heading: 'Official record', links: [{ title: 'City of Seattle: transit measure renewal', url: 'https://www.seattle.gov/transportation/projects-and-programs/programs/transit-program/seattle-transit-measure/renewal' }] },
+        { heading: 'News reports', links: [
+          { title: 'Westside Seattle: election night results', url: 'https://westsideseattle.com/robinson-papers/2026/11/03/election-night-tally-incumbents-lead-and-local-school-city-measures-pass' },
+          { title: 'KNKX: Seattle and King County results', url: 'https://www.knkx.org/2026-11-03/seattle-king-county-election-results' }
+        ] },
+        { heading: 'Competing views', links: [
+          { title: 'Supporters\' statement', url: null },
+          { title: 'Opponents\' statement', url: null }
+        ] }
       ]
     },
     {
-      id: 'senate-grace-period',
+      id: 'youth-vote-share',
       scope: 'national',
       scopeLabel: 'National',
-      sample: true,
-      teaser: 'The Senate votes on student loan relief',
-      setup: 'The Senate is voting on a bill to add six months to a student loan grace period. Supporters say it helps recent graduates. Opponents point to the cost.',
-      question: 'Did it pass?',
-      evidence: 'A budget estimate raised the projected cost, and two senators who had supported the idea asked for a smaller version.',
-      evidenceSource: { title: 'Sample source', url: null },
+      sample: false,
+      teaser: 'How big a share of the midterm vote came from young people?',
+      setup: 'In the 2022 midterms, voters ages 18 to 29 cast about 12% of all votes. Researchers tracked whether that share would grow in the November 3, 2026 midterms.',
+      question: 'Did young people make up a bigger share of voters than in 2022?',
+      evidence: 'A Harvard Youth Poll this fall found that 33% of young Americans said they would definitely vote.',
+      evidenceSource: { title: 'Harvard Youth Poll, Fall 2026', url: 'https://iop.harvard.edu/youth-poll/53rd-edition-fall-2026' },
       answer: 'no',
-      outcome: 'It failed 47 to 53, and sponsors said they would try a smaller bill.',
-      why: 'Current grace periods stay the same for now. A smaller bill would need a new vote.',
-      sampleCrowdYes: 0.63,
+      outcome: 'CIRCLE estimates young people cast 11% of votes, slightly below 2022. Another estimate puts it at 10%.',
+      why: 'Young people turned out in large numbers, but other age groups did too, so their share of the vote did not grow.',
+      sampleCrowdYes: 0.57,
       sources: [
-        { heading: 'Official record', links: [{ title: 'Senate roll call vote', url: null }] },
-        { heading: 'News reports', links: [{ title: 'Wire service report', url: null }, { title: 'National news article', url: null }] },
-        { heading: 'Competing views', links: [{ title: 'Bill sponsor statement', url: null }, { title: 'Bill opponent statement', url: null }] }
+        { heading: 'Research', links: [
+          { title: 'CIRCLE: youth vote in the 2026 midterms', url: 'https://circle.tufts.edu/national-youth-vote-choice-2026-midterms' },
+          { title: 'CIRCLE: how college students voted', url: 'https://circle.tufts.edu/index.php/latest-research/college-students-prioritized-economy-and-voted-democratic-2026-midterms' }
+        ] },
+        { heading: 'Polling before the election', links: [{ title: 'Harvard Youth Poll, Fall 2026', url: 'https://iop.harvard.edu/youth-poll/53rd-edition-fall-2026' }] },
+        { heading: 'News reports', links: [
+          { title: 'Yahoo News: youth turnout and the economy', url: 'https://www.yahoo.com/news/politics/articles/young-people-turned-near-record-133218725.html' },
+          { title: 'Axios: Gen Z voters in the 2026 midterms', url: 'https://www.axios.com/2026/11/05/gen-z-voters-2026-midterms-democrats-house' }
+        ] }
       ]
     },
     {
-      id: 'river-water-deal',
+      id: 'turkey-defense-pact',
       scope: 'global',
       scopeLabel: 'Global',
-      sample: true,
-      teaser: 'Two countries try to settle a water dispute',
-      setup: 'Two neighboring countries are holding a final round of talks on sharing a major river. Both say they need more water for farms during droughts.',
-      question: 'Did they sign a deal?',
-      evidence: 'Talks ran a day past the deadline, and one delegation said several technical issues were still unresolved.',
-      evidenceSource: { title: 'Sample source', url: null },
+      sample: false,
+      teaser: 'Turkey\'s parliament votes on a three-country defense pact',
+      setup: 'Turkey\'s parliament is voting on whether to ratify a joint defense agreement with Pakistan and Saudi Arabia. Ratification is the step that makes it binding under Turkish law.',
+      question: 'Did parliament ratify the pact?',
+      evidence: 'Only 398 of parliament\'s 592 members took part in the vote.',
+      evidenceSource: { title: 'Anadolu Agency morning briefing', url: 'https://www.aa.com.tr/en/world/morning-briefing-nov-6-2026/4113576' },
       answer: 'yes',
-      outcome: 'They signed a five-year deal that sets a review if drought conditions worsen.',
-      why: 'The deal sets shared rules for now, but its review clause leaves room for another dispute.',
-      sampleCrowdYes: 0.34,
+      outcome: 'Parliament ratified the agreement 279 to 119.',
+      why: 'Turkey is now formally part of the defense agreement with Pakistan and Saudi Arabia.',
+      sampleCrowdYes: 0.52,
       sources: [
-        { heading: 'Official record', links: [{ title: 'Signed agreement text', url: null }] },
-        { heading: 'News reports', links: [{ title: 'International wire report', url: null }, { title: 'Regional news article', url: null }] },
-        { heading: 'Competing views', links: [{ title: 'Country A government statement', url: null }, { title: 'Country B government statement', url: null }] }
+        { heading: 'News reports', links: [
+          { title: 'Anadolu Agency (Turkish state news agency)', url: 'https://www.aa.com.tr/en/world/morning-briefing-nov-6-2026/4113576' },
+          { title: 'Open Chronicle: global news brief', url: 'https://openchronicle.org/2026/11/06/global-news-brief-key-developments-around-the-world-november-6-2026/' }
+        ] },
+        { heading: 'Independent coverage', links: [{ title: 'International wire report', url: null }] },
+        { heading: 'Competing views', links: [
+          { title: 'Governing party statement', url: null },
+          { title: 'Opposition statement', url: null }
+        ] }
       ]
     }
   ]

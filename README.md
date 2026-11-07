@@ -16,7 +16,7 @@ Then go to http://localhost:4173.
 
 ## Edit the content
 
-All stories, sources and scoring live in [`js/data.js`](js/data.js). The current stories are samples written for the prototype, not real news. For each story you can set:
+All stories, sources and scoring live in [`js/data.js`](js/data.js). The current stories are real news from the week of November 3, 2026: the Seattle transit measure, the youth share of the midterm vote, and Turkey's defense pact vote. Their outcomes come from early counts, so check them against official results before presenting. For each story you can set:
 
 - `setup`, `question`, `evidence` and `outcome`: the text players see at each step.
 - `answer`: `"yes"` or `"no"`.
