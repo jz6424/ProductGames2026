@@ -273,7 +273,6 @@ html[data-theme="webcore"] .scope-screen {
   box-shadow: var(--bevel-in);
 }
 html[data-theme="webcore"] .wave path { stroke: var(--lcd-ink); stroke-width: 2; }
-html[data-theme="webcore"] .wave .wave-static { fill: var(--lcd-ink); stroke: none; opacity: 0.55; }
 html[data-theme="webcore"] .signal-label { font-size: 12px; font-weight: 700; color: #000080; }
 
 html[data-theme="webcore"] .meter-bar { background: #808080; border-radius: 0; }
