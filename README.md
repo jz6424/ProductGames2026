@@ -29,7 +29,16 @@ The default look is a retro desktop theme in [`css/theme-webcore.css`](css/theme
 
 ## Scoring
 
+Base points, before weighting:
+
 - Gut call: +20 if right, 0 if wrong or if the 20-second timer runs out.
 - Final call: Leaning +36 / −44, Confident +75 / −125, Certain +96 / −224.
+
+Each story then scales those points by two multipliers set in `scoring` in `js/data.js`:
+
+- Relevance: local ×1.25, national ×1, global ×0.8.
+- Difficulty, set per story by how clearly the evidence points to the outcome: easy (gains ×0.8, losses ×1.1), medium (×1), hard (gains ×1.3, losses ×0.8).
+
+Players don't see the point values before they answer. The reveal shows the gut, final and round total for each story.
 
 The score distribution on the results screen uses sample data from `sampleDistribution` in `js/data.js`.

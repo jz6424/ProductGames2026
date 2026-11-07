@@ -463,6 +463,15 @@ html[data-theme="webcore"] .choice { font-size: 14px; }
 /* Without bold, the How to play lead-ins stand out by color instead */
 html[data-theme="webcore"] .intro-steps li strong { color: #000080; }
 
+/* On phones the wide pixel font leaves no room beside the story text, so
+   each result row stacks: story and gut/final split first, then the points
+   and Learn more button on their own line. */
+@media (max-width: 599px) {
+  html[data-theme="webcore"] .result-row { flex-wrap: wrap; gap: 8px; padding: 12px; }
+  html[data-theme="webcore"] .result-row > div:first-child { flex: 1 1 100%; }
+  html[data-theme="webcore"] .result-actions { flex: 1 1 100%; justify-content: space-between; }
+}
+
 /* ---------- Wide screens ---------- */
 
 @media (min-width: 900px) {

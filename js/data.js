@@ -14,6 +14,19 @@ window.STATIC_DATA = {
     { id: 'certain', label: 'Certain', right: 96, wrong: -224 }
   ],
 
+  // Each story's points are scaled by two factors, multiplied together.
+  // Relevance: local stories affect players most directly, so they count most.
+  // Difficulty: how hard it is to reach the outcome from the evidence. Hard
+  // stories pay more for a right call and cost less for a wrong one.
+  scoring: {
+    relevance: { local: 1.25, national: 1, global: 0.8 },
+    difficulty: {
+      easy: { label: 'Easy', gain: 0.8, loss: 1.1 },
+      medium: { label: 'Medium', gain: 1, loss: 1 },
+      hard: { label: 'Hard', gain: 1.3, loss: 0.8 }
+    }
+  },
+
   // Sample spread of National + Global scores, used for the results histogram.
   // Skewed low for the demo, so a combined score of 50 to 100 beats about 80%.
   // Bin i covers scores from min + i * binSize up to the next bin.
@@ -29,6 +42,8 @@ window.STATIC_DATA = {
       scope: 'local',
       scopeLabel: 'Local · Seattle',
       frequency: '88.1',
+      // The evidence (a 9 to 0 council vote) points straight at Yes.
+      difficulty: 'easy',
       sample: false,
       teaser: 'Seattle votes on renewing its transit tax',
       setup: 'Seattle\'s transit measure is up for renewal on the November 3 ballot. The new version would double the city\'s transit sales tax from 0.15% to 0.3%, raising about $138 million a year.',
@@ -56,6 +71,8 @@ window.STATIC_DATA = {
       scope: 'local',
       scopeLabel: 'Local · Seattle',
       frequency: '91.5',
+      // The evidence (a budget shortfall) hints at a delay but gives no date.
+      difficulty: 'medium',
       sample: false,
       teaser: 'When will light rail reach Ballard?',
       setup: 'Sound Transit is planning a light rail line from downtown Seattle to Ballard, part of the regional transit expansion voters approved in 2016. The agency recently updated its timeline for the project.',
@@ -80,6 +97,8 @@ window.STATIC_DATA = {
       scope: 'national',
       scopeLabel: 'National',
       frequency: '96.5',
+      // The evidence (a turnout poll) does not say which way the share moved.
+      difficulty: 'hard',
       sample: false,
       teaser: 'How big a share of the midterm vote came from young people?',
       setup: 'In the 2022 midterms, voters ages 18 to 29 cast about 12% of all votes. Researchers tracked whether that share would grow in the November 3, 2026 midterms.',
@@ -107,6 +126,8 @@ window.STATIC_DATA = {
       scope: 'national',
       scopeLabel: 'National · California',
       frequency: '100.7',
+      // The evidence (a narrow 2024 bond win) is only a weak hint toward Yes.
+      difficulty: 'medium',
       sample: false,
       teaser: 'California votes on $11.25 billion for housing',
       setup: 'California voters are deciding on Proposition 1, which would let the state borrow $11.25 billion through bonds for housing assistance. Supporters say it would fund more affordable housing. Opponents point to the debt the state would take on.',
@@ -130,6 +151,8 @@ window.STATIC_DATA = {
       scope: 'global',
       scopeLabel: 'Global',
       frequency: '104.3',
+      // The evidence (partial attendance) does not point either way.
+      difficulty: 'hard',
       sample: false,
       teaser: 'Turkey\'s parliament votes on a three-country defense pact',
       setup: 'Turkey\'s parliament is voting on whether to ratify a joint defense agreement with Pakistan and Saudi Arabia. Ratification is the step that makes it binding under Turkish law.',

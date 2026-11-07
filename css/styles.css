@@ -318,6 +318,7 @@ p { margin: 0; }
 .breakdown div { display: flex; justify-content: space-between; gap: 12px; }
 .breakdown dt { margin: 0; }
 .breakdown dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text); }
+.breakdown-total { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--hairline); color: var(--text); font-weight: 500; }
 hr { width: 100%; border: 0; border-top: 1px solid var(--hairline); margin: 0; }
 
 /* ---------- Summary ---------- */

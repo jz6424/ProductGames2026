@@ -50,12 +50,21 @@
     return DATA.stories[state.idx];
   }
 
+  // A story's multipliers: relevance (local counts most) times difficulty
+  // (hard stories pay more for a right call and cost less for a wrong one).
+  function storyWeights(story) {
+    const relevance = DATA.scoring.relevance[story.scope] ?? 1;
+    const difficulty = DATA.scoring.difficulty[story.difficulty] || DATA.scoring.difficulty.medium;
+    return { gain: difficulty.gain * relevance, loss: difficulty.loss * relevance, difficulty: difficulty.label };
+  }
+
   function scoreRound(story) {
     const gutRight = state.gut === story.answer;
     const finalRight = state.final === story.answer;
     const conf = findConfidence(state.conf);
-    const gutPoints = gutRight ? DATA.gutPoints : 0;
-    const finalPoints = finalRight ? conf.right : conf.wrong;
+    const weights = storyWeights(story);
+    const gutPoints = gutRight ? Math.round(DATA.gutPoints * weights.gain) : 0;
+    const finalPoints = finalRight ? Math.round(conf.right * weights.gain) : Math.round(conf.wrong * weights.loss);
 
     let label = 'Fooled twice';
     let note = 'Your gut call and your final call were both wrong';
@@ -76,7 +85,7 @@
       note = 'The timer ran out on your gut call, and your final call was wrong';
     }
 
-    return { gutPoints, finalPoints, total: gutPoints + finalPoints, label, note };
+    return { gutPoints, finalPoints, total: gutPoints + finalPoints, label, note, difficulty: weights.difficulty };
   }
 
   // ---------- Actions ----------
@@ -245,7 +254,7 @@
       go({
         screen: 'reveal',
         lastRound: round,
-        results: state.results.concat([{ storyIdx: state.idx, label: round.label, points: round.total }])
+        results: state.results.concat([{ storyIdx: state.idx, label: round.label, points: round.total, gutPoints: round.gutPoints, finalPoints: round.finalPoints }])
       });
     },
     next() {
@@ -456,7 +465,6 @@
           ${DATA.confidence.map((c, i) => `
             <button type="button" class="confidence ${state.conf === c.id ? 'selected' : ''}" aria-pressed="${state.conf === c.id}" data-action="conf" data-value="${c.id}">
               <span class="confidence-name">${signalMeter(i + 1, DATA.confidence.length)}${c.label}</span>
-              <span class="stakes">${signed(c.right)} / ${signed(c.wrong)}</span>
             </button>`).join('')}
         </div>
         <div class="spacer"></div>
@@ -482,7 +490,9 @@
         <dl class="breakdown">
           <div><dt>Gut call: ${answerWord(state.gut)}</dt><dd>${signed(round.gutPoints)}</dd></div>
           <div><dt>Final call: ${answerWord(state.final)}, ${conf.label}</dt><dd>${signed(round.finalPoints)}</dd></div>
+          <div class="breakdown-total"><dt>Round total</dt><dd>${signed(round.total)}</dd></div>
         </dl>
+        <p class="muted small">${esc(round.difficulty)} story, ${esc(story.scopeLabel)}</p>
         <hr>
         <p class="small strong">${crowdYes}% of the sample crowd said Yes</p>
         <p class="small">${esc(story.why)}</p>
@@ -518,6 +528,7 @@
               <div>
                 <span class="muted small"><span class="freq">${esc(DATA.stories[r.storyIdx].frequency)}</span> ${esc(DATA.stories[r.storyIdx].scopeLabel)}</span>
                 <span class="strong">${esc(r.label)}</span>
+                <span class="muted small">Gut ${signed(r.gutPoints)} · Final ${signed(r.finalPoints)}</span>
               </div>
               <div class="result-actions">
                 <span class="points small-points ${r.points >= 0 ? 'pos' : 'neg'}">${signed(r.points)}</span>
