@@ -564,6 +564,22 @@
       </section>`;
   }
 
+  // The setup: a short summary, then each side's case when the story has two
+  // sides, or one box of extra context when it doesn't.
+  function setupBlock(story) {
+    let detail = '';
+    if (story.supporters && story.opponents) {
+      detail = `
+        <div class="sides">
+          <div class="side"><span class="side-label">Supporters say</span><p>${esc(story.supporters)}</p></div>
+          <div class="side"><span class="side-label">Opponents say</span><p>${esc(story.opponents)}</p></div>
+        </div>`;
+    } else if (story.extra) {
+      detail = `<div class="side"><span class="side-label">Additional info</span><p>${esc(story.extra)}</p></div>`;
+    }
+    return `<p class="setup">${esc(story.setup)}</p>${detail}`;
+  }
+
   function gutScreen(story) {
     return `
       <section class="screen">
@@ -577,16 +593,18 @@
           </span>
         </div>
         ${story.sample ? '<span class="tag">Sample story</span>' : ''}
-        <p class="setup">${esc(story.setup)}</p>
         <h2 class="question">${esc(story.question)}</h2>
+        ${setupBlock(story)}
         <div class="spacer"></div>
-        <div class="timer">
-          <span>Time left for your gut call</span>
-          <span id="time-bar" class="timer-track">${Array.from({ length: DATA.gutSeconds }, (_, i) => `<span class="timer-block ${i < state.timeLeft ? 'on' : ''}"></span>`).join('')}</span>
-        </div>
-        <div class="choice-row">
-          <button type="button" class="choice" data-action="gut" data-value="no">No</button>
-          <button type="button" class="choice" data-action="gut" data-value="yes">Yes</button>
+        <div class="gut-actions">
+          <div class="timer">
+            <span>Time left for your gut call</span>
+            <span id="time-bar" class="timer-track">${Array.from({ length: DATA.gutSeconds }, (_, i) => `<span class="timer-block ${i < state.timeLeft ? 'on' : ''}"></span>`).join('')}</span>
+          </div>
+          <div class="choice-row">
+            <button type="button" class="choice" data-action="gut" data-value="no">No</button>
+            <button type="button" class="choice" data-action="gut" data-value="yes">Yes</button>
+          </div>
         </div>
       </section>`;
   }

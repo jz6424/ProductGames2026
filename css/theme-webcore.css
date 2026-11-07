@@ -455,6 +455,32 @@ html[data-theme="webcore"] .intro-steps li strong { color: #000080; }
   html[data-theme="webcore"] .result-actions { flex: 1 1 100%; justify-content: space-between; }
 }
 
+/* ---------- Setup sections ---------- */
+
+/* Supporters, opponents and extra info as small sunken panels with a
+   navy caption, like labelled boxes in an old settings dialog */
+html[data-theme="webcore"] .side {
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: var(--bevel-in);
+}
+html[data-theme="webcore"] .side-label { font-size: 9px; line-height: 14px; color: #000080; }
+html[data-theme="webcore"] .side p { font-size: 10px; line-height: 16px; color: #000000; }
+
+html[data-theme="webcore"] .gut-actions { background: #c0c0c0; box-shadow: 0 -1px 0 #808080, 0 -2px 0 #ffffff; }
+
+/* Phones: tighter gut-call spacing so most stories fit without scrolling */
+@media (max-width: 599px) {
+  html[data-theme="webcore"] .phone.in-round .screen { gap: 12px; padding-top: 16px; }
+  html[data-theme="webcore"] .question { font-size: 22px; line-height: 1.15; }
+  html[data-theme="webcore"] .setup { line-height: 20px; }
+  html[data-theme="webcore"] .side p { line-height: 14px; }
+  html[data-theme="webcore"] .phone.in-round .wave { height: 44px; }
+  html[data-theme="webcore"] .choice { min-height: 48px; }
+}
+
 /* ---------- Home station chips ---------- */
 
 /* Level headings are small raised tags; frequencies are tiny green LCDs */
@@ -579,6 +605,7 @@ html[data-theme="webcore"] .ranked-title { font-weight: 400; color: #000000; }
   html[data-theme="webcore"] p,
   html[data-theme="webcore"] .teaser,
   html[data-theme="webcore"] .outcome { font-size: 12px; line-height: 22px; }
+  html[data-theme="webcore"] .side p { font-size: 12px; line-height: 20px; }
   html[data-theme="webcore"] .small,
   html[data-theme="webcore"] .scope,
   html[data-theme="webcore"] .question-row,

@@ -290,6 +290,35 @@ p { margin: 0; }
 .timer-block { flex: 1 1 0; border-radius: 1px; background: var(--hairline-strong); }
 .timer-block.on { background: var(--text); }
 
+/* The timer and answers stick to the bottom of the screen, so they stay in
+   view during the countdown even when a long setup has to scroll. */
+.gut-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: 0 -20px -24px;
+  padding: 12px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface);
+  box-shadow: 0 -1px 0 var(--hairline);
+}
+
+/* Each side's case, or extra context, under the setup summary */
+.sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.side {
+  padding: 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.side-label { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--muted); }
+.side p { font-size: 14px; line-height: 20px; color: var(--text-2); }
+
 /* ---------- Evidence ---------- */
 
 .question-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px; color: var(--text-2); }
