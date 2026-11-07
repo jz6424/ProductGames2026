@@ -382,6 +382,7 @@ html[data-theme="webcore"] .guess-thumb {
   box-shadow: var(--bevel-out);
 }
 html[data-theme="webcore"] .guess-dial.untouched .guess-needle { opacity: 0.6; }
+html[data-theme="webcore"] .guess-dial.dragging .guess-thumb { box-shadow: var(--bevel-in); }
 
 /* Reveal markers as plain tooltip tags */
 html[data-theme="webcore"] .guess-marker.truth { background: #008000; box-shadow: none; }

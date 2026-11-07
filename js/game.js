@@ -106,9 +106,12 @@
     return story.fullCredit || (story.max - story.min) * 0.25;
   }
 
+  function dialNumber(value) {
+    return Number.isInteger(value) ? String(value) : value.toFixed(1);
+  }
+
   function formatDial(story, value) {
-    const text = Number.isInteger(value) ? String(value) : value.toFixed(1);
-    return text + (story.unit || '');
+    return dialNumber(value) + (story.unit || '');
   }
 
   // A gut or final call as text, for either kind of question.
@@ -605,11 +608,14 @@
 
   // The dial a player tunes to a number. value is null until the needle has
   // been touched. Passing markers makes it a read-only reveal that also shows
-  // where the truth, the crowd and the player landed.
-  function guessDial(story, value, id, markers) {
+  // where the truth, the crowd and the player landed. On the reveal, from is
+  // the player's call: the needle, shown at value, sweeps in from there.
+  function guessDial(story, value, id, markers, from) {
     const touched = value !== null;
     const shown = touched ? value : guessMidpoint(story);
     const at = guessPercent(story, shown);
+    const sweeps = typeof from === 'number' && from !== shown;
+    const start = sweeps ? `; --from: ${guessPercent(story, from)}%` : '';
     const tags = (markers || []).map((m) => {
       const where = guessPercent(story, m.value);
       const edge = where < 18 ? 'edge-start' : where > 82 ? 'edge-end' : '';
@@ -620,12 +626,12 @@
       ? 'aria-hidden="true"'
       : `role="slider" tabindex="0" aria-label="${esc(story.question)}" aria-valuemin="${story.min}" aria-valuemax="${story.max}" aria-valuenow="${shown}" aria-valuetext="${esc(formatDial(story, shown))}"`;
     return `
-      <div class="guess-dial ${touched ? 'touched' : 'untouched'} ${markers ? 'has-markers' : ''}" id="${id}" data-min="${story.min}" data-max="${story.max}" data-value="${shown}" ${control}>
-        <div class="guess-readout"><span class="guess-value">${touched ? shown : '--'}</span><span class="guess-unit">${esc(story.unit || '')}</span></div>
+      <div class="guess-dial ${touched ? 'touched' : 'untouched'} ${markers ? 'has-markers' : ''} ${sweeps ? 'sweeps' : ''}" id="${id}" data-min="${story.min}" data-max="${story.max}" data-value="${shown}" ${control}>
+        <div class="guess-readout"><span class="guess-value" ${sweeps ? `data-count="${shown}" data-from="${from}" data-delay="350" data-duration="1000"` : ''}>${touched ? dialNumber(shown) : '--'}</span><span class="guess-unit">${esc(story.unit || '')}</span></div>
         <div class="guess-track">
           <div class="guess-scale">${guessTicks(story)}</div>${tags}
-          <div class="guess-fill" style="width: ${at}%"></div>
-          <div class="guess-needle" style="left: ${at}%"><span class="guess-thumb"></span></div>
+          <div class="guess-fill" style="width: ${at}%${start}"></div>
+          <div class="guess-needle" style="left: ${at}%${start}"><span class="guess-thumb"></span></div>
         </div>
       </div>`;
   }
@@ -639,6 +645,7 @@
     const max = Number(dial.dataset.max);
     const track = dial.querySelector('.guess-track');
     let dragging = false;
+    let snapTimer = null;
 
     function setValue(raw) {
       const value = Math.max(min, Math.min(max, Math.round(raw)));
@@ -662,6 +669,9 @@
     track.addEventListener('pointerdown', (event) => {
       if (dial.classList.contains('locked')) return;
       dragging = true;
+      dial.classList.add('dragging', 'snapping');
+      window.clearTimeout(snapTimer);
+      snapTimer = window.setTimeout(() => dial.classList.remove('snapping'), 160);
       setFromPointer(event);
       try {
         track.setPointerCapture(event.pointerId);
@@ -673,7 +683,10 @@
       if (dragging) setFromPointer(event);
     });
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((name) => {
-      track.addEventListener(name, () => { dragging = false; });
+      track.addEventListener(name, () => {
+        dragging = false;
+        dial.classList.remove('dragging');
+      });
     });
 
     dial.addEventListener('keydown', (event) => {
@@ -761,7 +774,7 @@
                 <span class="level-chip">${esc(group.label)}</span>
                 <ul class="story-list">
                   ${group.stations.map(({ story, number }) => `
-                    <li class="card preset-row">
+                    <li class="card preset-row" style="--i: ${number}">
                       <span class="preset-key" aria-hidden="true">${number}</span>
                       <span class="freq-chip">${esc(story.frequency)}</span>
                       <span class="teaser">${esc(story.teaser)}</span>
@@ -894,10 +907,10 @@
       <section class="screen reveal">
         <div class="reveal-head">
           <h2>${esc(round.label)}</h2>
-          <span class="points ${round.total >= 0 ? 'pos' : 'neg'}">${signed(round.total)}</span>
+          <span class="points ${round.total >= 0 ? 'pos' : 'neg'}" data-count="${round.total}" data-format="signed" data-delay="250">${signed(round.total)}</span>
         </div>
         <p class="muted small">${esc(round.note)}</p>
-        ${isDial(story) ? guessDial(story, state.final, 'reveal-dial', revealMarkers(story)) : ''}
+        ${isDial(story) ? guessDial(story, story.answer, 'reveal-dial', revealMarkers(story), state.final) : ''}
         <div class="card">
           <span class="scope">What happened</span>
           <span class="outcome">${esc(story.outcome)}</span>
@@ -934,12 +947,12 @@
       <section class="screen summary">
         <div class="score-panel">
           <span class="scope">Today's score</span>
-          <div class="total"><strong>${signed(total)}</strong><span class="muted">total points</span></div>
+          <div class="total"><strong data-count="${total}" data-format="signed" data-delay="150" data-duration="1200">${signed(total)}</strong><span class="muted">total points</span></div>
           ${signalMeter(state.results.filter((r) => r.points > 0).length, DATA.stories.length, state.results.filter((r) => r.points > 0).length + ' of ' + DATA.stories.length + ' stories scored points')}
         </div>
         <ul class="result-list">
           ${state.results.map((r, i) => `
-            <li class="result-row">
+            <li class="result-row" style="--i: ${i}">
               <div>
                 <span class="muted small"><span class="freq">${esc(DATA.stories[r.storyIdx].frequency)}</span> ${esc(DATA.stories[r.storyIdx].scopeLabel)}</span>
                 <span class="strong">${esc(r.label)}</span>
@@ -951,13 +964,13 @@
               </div>
             </li>`).join('')}
         </ul>
-        <div class="combined"><span class="strong">National and global score</span><strong>${signed(combined)}</strong></div>
+        <div class="combined"><span class="strong">National and global score</span><strong data-count="${combined}" data-format="signed" data-delay="450" data-duration="1000">${signed(combined)}</strong></div>
         <div class="dist-meta"><span class="strong">All players today</span><span>Sample data</span></div>
         <p class="strong">You scored higher than about ${percentile}% of players</p>
         <figure class="histogram" role="img" aria-label="Score distribution. You scored higher than about ${percentile}% of players.">
           <div class="bars">
             ${dist.counts.map((count, i) => `
-              <div class="bin ${i === yourBin ? 'you' : ''}">
+              <div class="bin ${i === yourBin ? 'you' : ''}" style="--i: ${i}">
                 ${i === yourBin ? '<span class="you-label">You</span>' : ''}
                 <span class="bar" style="height: ${Math.round((count / tallest) * 84)}px"></span>
               </div>`).join('')}
@@ -993,6 +1006,34 @@
       </section>`;
   }
 
+  // Counts any element with a data-count up (or down) to that number, like a
+  // meter settling. The finished number is already in the page, so it still
+  // reads right without this. aria-live is switched off on these elements so a
+  // screen reader hears the result once instead of every step.
+  function animateCounts() {
+    if (reduceMotion) return;
+    app.querySelectorAll('[data-count]').forEach((el) => {
+      const to = Number(el.dataset.count);
+      const from = Number(el.dataset.from || 0);
+      const delay = Number(el.dataset.delay || 0);
+      const duration = Number(el.dataset.duration || 900);
+      const show = (value, done) => {
+        const n = done ? value : Math.round(value);
+        el.textContent = el.dataset.format === 'signed' ? signed(n) : dialNumber(n);
+      };
+      el.setAttribute('aria-live', 'off');
+      show(from, true);
+      const startAt = performance.now() + delay;
+      function frame(now) {
+        if (!el.isConnected) return;
+        const t = Math.min(1, Math.max(0, (now - startAt) / duration));
+        show(from + (to - from) * (1 - Math.pow(1 - t, 3)), t === 1);
+        if (t < 1) window.requestAnimationFrame(frame);
+      }
+      window.requestAnimationFrame(frame);
+    });
+  }
+
   // ---------- Render ----------
 
   function render() {
@@ -1024,6 +1065,7 @@
     if (state.screen === 'final' && isDial(story)) {
       attachGuessDial('final-dial', (value) => { state.final = value; });
     }
+    animateCounts();
   }
 
   // ---------- Logo static ----------

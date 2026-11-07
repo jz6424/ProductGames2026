@@ -1076,3 +1076,45 @@ a.source-link:hover { background: var(--raised); }
 @media (min-width: 600px) {
   .city-menu-body { grid-template-columns: 180px minmax(0, 1fr); }
 }
+
+/* ---------- Motion ---------- */
+
+@keyframes needle-sweep { from { left: var(--from); } }
+@keyframes fill-sweep { from { width: var(--from); } }
+@keyframes marker-in { from { opacity: 0; } }
+@keyframes marker-drop { from { opacity: 0; translate: 0 -10px; } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.8); } }
+@keyframes needle-nudge { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(12px); } 70% { transform: translateX(-12px); } }
+@keyframes card-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+@keyframes row-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes bar-grow { from { transform: scaleY(0); } }
+
+/* All of this is decoration, so it only runs when the player hasn't asked for
+   less motion. Without it every screen simply shows its finished state. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Reveal: the needle tunes in from the player's call to the truth, then the
+     tags settle in around it, your own first and the truth last. */
+  .guess-dial.sweeps .guess-needle { animation: needle-sweep 1s cubic-bezier(0.34, 1.4, 0.64, 1) 350ms both; }
+  .guess-dial.sweeps .guess-fill { animation: fill-sweep 1s cubic-bezier(0.22, 1, 0.36, 1) 350ms both; }
+  .guess-dial.has-markers .guess-marker { animation: marker-in 360ms var(--ease) both; }
+  .guess-dial.has-markers .guess-marker.you { animation-delay: 120ms; }
+  .guess-dial.has-markers .guess-marker.crowd { animation-delay: 520ms; }
+  .guess-dial.has-markers .guess-marker.truth { animation-name: marker-drop; animation-delay: 1050ms; }
+  .reveal-head h2 { animation: pop-in 420ms var(--ease) 120ms both; }
+
+  /* Gut call: the needle sways until it is touched, inviting a drag. The
+     thumb presses in while held, and a tap glides the needle to its spot. */
+  .guess-dial.untouched:not(.locked) .guess-needle { animation: needle-nudge 2.8s ease-in-out infinite; }
+  .guess-dial.dragging .guess-thumb { scale: 1.25; }
+  .guess-dial.snapping .guess-needle { transition: left 140ms var(--ease); }
+  .guess-dial.snapping .guess-fill { transition: width 140ms var(--ease); }
+
+  /* Evidence slides in like a slip off the wire */
+  .evidence-card { animation: card-in 420ms var(--ease) 120ms both; }
+
+  /* Lists and the histogram fill in one item at a time */
+  .preset-row { animation: row-in 320ms var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms + 150ms); }
+  .result-row { animation: row-in 320ms var(--ease) both; animation-delay: calc(var(--i, 0) * 80ms + 150ms); }
+  .bar { transform-origin: bottom; animation: bar-grow 520ms var(--ease) both; animation-delay: calc(var(--i, 0) * 45ms + 350ms); }
+  .bin.you .you-label { animation: pop-in 400ms var(--ease) 950ms both; }
+}
