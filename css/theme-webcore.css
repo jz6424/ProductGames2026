@@ -411,9 +411,16 @@ html[data-theme="webcore"] .intro h2 {
 html[data-theme="webcore"] .intro-steps li,
 html[data-theme="webcore"] .intro-steps li strong { color: #000000; }
 html[data-theme="webcore"] .intro-steps strong { font-weight: 700; }
-html[data-theme="webcore"] .intro-steps li::marker { font-size: 14px; font-weight: 700; color: #000080; }
+html[data-theme="webcore"] .intro-steps li::marker { font-size: 11px; color: #000080; }
 html[data-theme="webcore"] .intro .muted { color: #1a1a1a; }
 html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); }
+/* Room for the wide pixel numbers so they stay inside the dialog */
+html[data-theme="webcore"] .intro-steps { padding-left: 36px; gap: 12px; }
+html[data-theme="webcore"] .intro-steps li { padding-left: 4px; }
+/* Wider dialog on bigger screens, so the wide font wraps less */
+@media (min-width: 600px) {
+  html[data-theme="webcore"] .intro { width: min(560px, calc(100% - 64px)); }
+}
 
 /* ---------- Press Start 2P text sizes ---------- */
 
