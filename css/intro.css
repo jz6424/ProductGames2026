@@ -2,48 +2,66 @@
 .intro {
   width: min(400px, calc(100% - 32px));
   max-height: calc(100vh - 32px);
-  padding: 24px 20px 20px;
-  border: 1px solid var(--line-strong);
-  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 16px;
   background: var(--surface);
   color: var(--text);
   font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 22px;
   overflow-y: auto;
 }
 
 .intro[open] {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+  animation: enter 320ms var(--ease) both;
 }
 
 .intro::backdrop {
-  background: rgba(13, 12, 15, 0.8);
+  background: rgba(18, 17, 15, 0.8);
 }
 
 .intro h2 {
+  margin-top: -8px;
   font-size: 28px;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .intro-steps {
   margin: 0;
-  padding-left: 22px;
+  padding-left: 24px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 15px;
-  line-height: 1.4;
+  gap: 12px;
+}
+
+.intro-steps strong {
+  font-weight: 500;
+}
+
+.intro-steps li {
+  color: var(--text-2);
+}
+
+.intro-steps li strong {
+  color: var(--text);
 }
 
 .intro-steps li::marker {
   font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--accent);
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .intro form {
-  margin: 4px 0 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro[open] { animation: none; }
 }

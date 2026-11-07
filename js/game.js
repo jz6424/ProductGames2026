@@ -39,7 +39,7 @@
   }
 
   function gutSentence(value) {
-    return value ? 'Your gut said ' + answerWord(value) + '.' : 'You didn\'t make a gut call.';
+    return value ? 'Your gut said ' + answerWord(value) : 'You didn\'t make a gut call';
   }
 
   function findConfidence(id) {
@@ -58,22 +58,22 @@
     const finalPoints = finalRight ? conf.right : conf.wrong;
 
     let label = 'Fooled twice';
-    let note = 'Your gut call and your final call were both wrong.';
+    let note = 'Your gut call and your final call were both wrong';
     if (gutRight && finalRight) {
       label = 'Called it';
-      note = 'Your instinct was right, and you stayed with it.';
+      note = 'Your instinct was right, and you stayed with it';
     } else if (finalRight && state.gut === null) {
       label = 'Good final call';
-      note = 'You missed the gut call, but the evidence got you there.';
+      note = 'You missed the gut call, but the evidence got you there';
     } else if (finalRight) {
       label = 'Great update';
-      note = 'The evidence changed your mind, and it paid off.';
+      note = 'The evidence changed your mind, and it paid off';
     } else if (gutRight) {
       label = 'Talked out of it';
-      note = 'Your first instinct was right this time.';
+      note = 'Your first instinct was right this time';
     } else if (state.gut === null) {
       label = 'Missed it';
-      note = 'The timer ran out on your gut call, and your final call was wrong.';
+      note = 'The timer ran out on your gut call, and your final call was wrong';
     }
 
     return { gutPoints, finalPoints, total: gutPoints + finalPoints, label, note };
@@ -110,7 +110,7 @@
     const count = document.getElementById('time-left');
     const bar = document.getElementById('time-bar');
     if (count) count.textContent = String(Math.max(0, state.timeLeft));
-    if (bar) bar.style.width = (Math.max(0, state.timeLeft) / DATA.gutSeconds) * 100 + '%';
+    if (bar) bar.style.transform = 'scaleX(' + Math.max(0, state.timeLeft) / DATA.gutSeconds + ')';
   }
 
   function startRound(idx) {
@@ -218,11 +218,11 @@
     return `
       <section class="screen home">
         <div class="brand-row">
-          <span class="brand">STATIC</span>
-          <span class="city">${esc(DATA.city.toUpperCase())}</span>
+          <span class="brand">Static</span>
+          <span class="city">${esc(DATA.city)}</span>
         </div>
-        <h1>Guess how real news stories turned out.</h1>
-        <p class="muted">You get a score right after each story, and a full round takes about three minutes.</p>
+        <h1>Guess how real news stories turned out</h1>
+        <p class="muted">You get a score right after each story, and a full round takes about three minutes</p>
         <ul class="story-list">
           ${DATA.stories.map((s) => `
             <li class="card">
@@ -230,7 +230,7 @@
               <span class="teaser">${esc(s.teaser)}</span>
             </li>`).join('')}
         </ul>
-        <p class="muted small">At the end, you can see how your score compares with other players.</p>
+        <p class="muted small">At the end, you can see how your score compares with other players</p>
         <div class="spacer"></div>
         <button type="button" class="primary" data-action="start">Start today's game</button>
         <p class="footnote">Real stories from the week of Nov 3, 2026, with sample crowd data</p>
@@ -246,7 +246,7 @@
         <div class="spacer"></div>
         <div class="timer">
           <span><strong id="time-left">${state.timeLeft}</strong> seconds left for your gut call</span>
-          <span class="timer-track"><span id="time-bar" class="timer-bar" style="width: ${(state.timeLeft / DATA.gutSeconds) * 100}%"></span></span>
+          <span class="timer-track"><span id="time-bar" class="timer-bar" style="transform: scaleX(${state.timeLeft / DATA.gutSeconds})"></span></span>
         </div>
         <div class="choice-row">
           <button type="button" class="choice" data-action="gut" data-value="no">No</button>
@@ -259,7 +259,7 @@
     const source = story.evidenceSource;
     const sourceHtml = source.url
       ? `<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)}</a>`
-      : `${esc(source.title)} (link to add)`;
+      : esc(source.title);
     return `
       <section class="screen">
         <div class="question-row">
@@ -319,7 +319,7 @@
           <div><dt>Final call: ${answerWord(state.final)}, ${conf.label}</dt><dd>${signed(round.finalPoints)}</dd></div>
         </dl>
         <hr>
-        <p class="small strong">${crowdYes}% of the sample crowd said Yes.</p>
+        <p class="small strong">${crowdYes}% of the sample crowd said Yes</p>
         <p class="small">${esc(story.why)}</p>
         <div class="spacer"></div>
         <button type="button" class="primary" data-action="next">${state.idx < DATA.stories.length - 1 ? 'Next story' : 'See my results'}</button>
@@ -359,7 +359,7 @@
         </ul>
         <div class="combined"><span class="strong">National and global score</span><strong>${signed(combined)}</strong></div>
         <div class="dist-meta"><span class="strong">All players today</span><span>Sample data</span></div>
-        <p class="strong">You scored higher than about ${percentile}% of players.</p>
+        <p class="strong">You scored higher than about ${percentile}% of players</p>
         <figure class="histogram" role="img" aria-label="Score distribution. You scored higher than about ${percentile}% of players.">
           <div class="bars">
             ${dist.counts.map((count, i) => `
@@ -385,14 +385,17 @@
         <span class="scope">${esc(story.scopeLabel)}</span>
         <h2>${esc(story.teaser)}</h2>
         <p>${esc(story.outcome)}</p>
-        ${story.sources.map((section) => `
+        ${story.sources.map((section) => {
+          // Links without a URL yet stay in data.js but are not shown.
+          const links = section.links.filter((link) => link.url);
+          if (!links.length) return '';
+          return `
           <div class="source-group">
             <span class="label">${esc(section.heading)}</span>
-            ${section.links.map((link) => link.url
-              ? `<a class="source-link" href="${esc(link.url)}" target="_blank" rel="noopener">${esc(link.title)}</a>`
-              : `<span class="source-link placeholder">${esc(link.title)} <span class="muted small">Link to add</span></span>`).join('')}
-          </div>`).join('')}
-        <p class="muted small">We group links by source type and show who is speaking, instead of rating outlets by political leaning.</p>
+            ${links.map((link) => `<a class="source-link" href="${esc(link.url)}" target="_blank" rel="noopener">${esc(link.title)}</a>`).join('')}
+          </div>`;
+        }).join('')}
+        <p class="muted small">We group links by source type and show who is speaking, instead of rating outlets by political leaning</p>
       </section>`;
   }
 
