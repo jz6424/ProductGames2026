@@ -21,7 +21,11 @@ All stories, sources and scoring live in [`js/data.js`](js/data.js). The current
 - `setup`, `question`, `evidence` and `outcome`: the text players see at each step.
 - `answer`: `"yes"` or `"no"`.
 - `sampleCrowdYes`: the share of the sample crowd that answered Yes, from 0 to 1.
-- `sources`: the Learn more links, grouped by source type. Set a link's `url` to make it clickable. Links with `url: null` show as placeholders.
+- `sources`: the Learn more links, grouped by source type. Set a link's `url` to make it clickable. Links with `url: null` are hidden until they have one.
+
+## Themes
+
+An experimental retro desktop theme lives in [`css/theme-webcore.css`](css/theme-webcore.css). Add `?theme=webcore` to the URL to try it, for example https://jz6424.github.io/ProductGames2026/?theme=webcore. The choice is remembered on that device, so use `?theme=default` to switch back. To drop the experiment, delete the file, its `<link>` in `index.html`, and `js/theme.js`.
 
 ## Scoring
 

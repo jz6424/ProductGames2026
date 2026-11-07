@@ -1,0 +1,289 @@
+/*
+  Experimental "webcore" theme: a late-90s desktop look. Opt in with
+  ?theme=webcore (see js/theme.js). Every rule is scoped to
+  html[data-theme="webcore"], so the default look is untouched. This theme
+  deliberately breaks the Unslop rules (gradients, bevels, gradient text);
+  delete this file and its <link> to drop the experiment.
+*/
+
+html[data-theme="webcore"] {
+  --page: #008080;
+  --surface: #c0c0c0;
+  --card: #ffffff;
+  --raised: #dfdfdf;
+  --hairline: #808080;
+  --hairline-strong: #808080;
+  --text: #000000;
+  --text-2: #1a1a1a;
+  --muted: #404040;
+  --accent: #000080;
+  --accent-surface: #000080;
+  --pos: #006b00;
+  --neg: #b00000;
+  --font-body: Tahoma, Verdana, 'Segoe UI', sans-serif;
+  --font-mono: 'VT323', 'Courier New', monospace;
+
+  --title-bar: linear-gradient(90deg, #000080, #1084d0);
+  --bevel-out: inset -1px -1px #404040, inset 1px 1px #ffffff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --bevel-in: inset -1px -1px #ffffff, inset 1px 1px #404040, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+  --lcd-bg: #001a00;
+  --lcd-ink: #33ff66;
+}
+
+/* ---------- Desktop and window ---------- */
+
+html[data-theme="webcore"] body { background: var(--page); }
+html[data-theme="webcore"] a { color: #0000ee; text-decoration-color: currentColor; }
+html[data-theme="webcore"] button:focus-visible,
+html[data-theme="webcore"] a:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
+
+html[data-theme="webcore"] .phone {
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  box-shadow: var(--bevel-out);
+  padding: 3px;
+}
+html[data-theme="webcore"] .phone::before {
+  content: "Static.exe - 88.1 FM";
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 32px 0 8px;
+  background: var(--title-bar);
+  color: #ffffff;
+  font: 700 13px/1 var(--font-body);
+}
+html[data-theme="webcore"] .phone::after {
+  content: "\00d7";
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 20px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+  color: #000000;
+  font: 700 14px/1 var(--font-body);
+}
+
+@media (min-width: 600px) {
+  html[data-theme="webcore"] body { padding-bottom: 72px; }
+  html[data-theme="webcore"] .phone { border-radius: 0; }
+  /* Taskbar along the bottom of the desktop */
+  html[data-theme="webcore"] body::after {
+    content: "Static   |   88.1  96.5  104.3 FM   |   Seattle";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    background: #c0c0c0;
+    box-shadow: inset 0 1px #ffffff, inset 0 2px #dfdfdf;
+    color: #000000;
+    font: 700 13px/1 var(--font-body);
+    white-space: pre;
+  }
+}
+
+/* ---------- Type ---------- */
+
+html[data-theme="webcore"] h1,
+html[data-theme="webcore"] h2 { font-weight: 700; }
+html[data-theme="webcore"] .home h1 { color: #000080; letter-spacing: -0.01em; }
+html[data-theme="webcore"] .brand {
+  font-family: 'Arial Black', Impact, var(--font-body);
+  font-size: 26px;
+  font-style: italic;
+  background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd700, #00c853, #00b0ff, #7c4dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1px #000000;
+}
+html[data-theme="webcore"] .city { font-family: var(--font-mono); font-size: 18px; color: #000080; }
+
+/* ---------- Raised buttons ---------- */
+
+html[data-theme="webcore"] .primary,
+html[data-theme="webcore"] .ghost,
+html[data-theme="webcore"] .choice,
+html[data-theme="webcore"] .confidence,
+html[data-theme="webcore"] .preset-key,
+html[data-theme="webcore"] .preset-mark {
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  color: #000000;
+  box-shadow: var(--bevel-out);
+}
+html[data-theme="webcore"] .primary { font-weight: 700; }
+html[data-theme="webcore"] .primary:hover,
+html[data-theme="webcore"] .ghost:hover,
+html[data-theme="webcore"] .choice:hover,
+html[data-theme="webcore"] .confidence:hover { background: #c8c8c8; }
+html[data-theme="webcore"] .primary:active,
+html[data-theme="webcore"] .ghost:active,
+html[data-theme="webcore"] .choice:active,
+html[data-theme="webcore"] .confidence:active { box-shadow: var(--bevel-in); transform: none; }
+html[data-theme="webcore"] .primary:disabled,
+html[data-theme="webcore"] .choice:disabled {
+  background: #c0c0c0;
+  color: #808080;
+  text-shadow: 1px 1px #ffffff;
+}
+
+/* Selected answer and confidence: classic navy selection */
+html[data-theme="webcore"] .choice.selected,
+html[data-theme="webcore"] .confidence.selected {
+  background: #000080;
+  color: #ffffff;
+  box-shadow: var(--bevel-in);
+}
+html[data-theme="webcore"] .stakes { font-size: 18px; color: #000080; }
+html[data-theme="webcore"] .confidence.selected .stakes { color: #ffffff; }
+html[data-theme="webcore"] .confidence.selected .meter-bar.on { background: #ffff00; }
+
+/* ---------- Sunken white panels ---------- */
+
+html[data-theme="webcore"] .card,
+html[data-theme="webcore"] .story-list,
+html[data-theme="webcore"] .result-list,
+html[data-theme="webcore"] .evidence-card,
+html[data-theme="webcore"] .tuner,
+html[data-theme="webcore"] .source-link {
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: var(--bevel-in);
+}
+html[data-theme="webcore"] .story-list .card { box-shadow: none; background: none; }
+html[data-theme="webcore"] .story-list .card + .card,
+html[data-theme="webcore"] .result-row + .result-row { border-top: 1px solid #c0c0c0; }
+html[data-theme="webcore"] a.source-link:hover { background: #000080; color: #ffffff; }
+
+/* Panels that get their own title bar */
+html[data-theme="webcore"] .evidence-card > .scope,
+html[data-theme="webcore"] .reveal .card > .scope {
+  margin: -20px -20px 0;
+  padding: 4px 8px;
+  background: var(--title-bar);
+  color: #ffffff;
+  font-weight: 700;
+}
+html[data-theme="webcore"] .reveal .card > .scope { margin: -16px -16px 0; }
+html[data-theme="webcore"] .evidence-card { padding: 20px; padding-top: 20px; }
+html[data-theme="webcore"] .evidence-card > .scope { margin-top: -18px; }
+html[data-theme="webcore"] .reveal .card > .scope { margin-top: -14px; }
+
+/* ---------- Round header: LCD, oscilloscope and dial ---------- */
+
+html[data-theme="webcore"] .lcd,
+html[data-theme="webcore"] .score-panel {
+  border: 0;
+  border-radius: 0;
+  background: var(--lcd-bg);
+  box-shadow: var(--bevel-in);
+  color: var(--lcd-ink);
+}
+html[data-theme="webcore"] .lcd-freq { font-size: 28px; line-height: 24px; }
+html[data-theme="webcore"] .lcd-band { color: #1f9c3f; font-size: 16px; }
+html[data-theme="webcore"] .station .scope { font-weight: 700; }
+html[data-theme="webcore"] .round-meta { font-size: 16px; }
+
+html[data-theme="webcore"] .scope-screen {
+  border: 0;
+  border-radius: 0;
+  background-color: var(--lcd-bg);
+  background-image:
+    linear-gradient(rgba(51, 255, 102, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 255, 102, 0.14) 1px, transparent 1px);
+  box-shadow: var(--bevel-in);
+}
+html[data-theme="webcore"] .wave path { stroke: var(--lcd-ink); stroke-width: 2; }
+html[data-theme="webcore"] .signal-label { font-size: 16px; color: #000080; }
+
+html[data-theme="webcore"] .meter-bar { background: #808080; border-radius: 0; }
+html[data-theme="webcore"] .meter-bar.on { background: #008000; }
+html[data-theme="webcore"] .tick { background: #808080; }
+html[data-theme="webcore"] .tick.major { background: #000000; }
+html[data-theme="webcore"] .tick-label { font-size: 16px; color: #000000; }
+html[data-theme="webcore"] .needle { background: #ff0000; border-radius: 0; }
+html[data-theme="webcore"] .dial-scale { border-bottom-color: #000000; }
+html[data-theme="webcore"] .preset-mark { font-size: 16px; color: #000000; }
+html[data-theme="webcore"] .preset-key { font-size: 18px; box-shadow: var(--bevel-out); }
+html[data-theme="webcore"] .freq { font-size: 16px; color: #000080; }
+
+/* Step progress as chunky blocks */
+html[data-theme="webcore"] .step-bar { height: 8px; border-radius: 0; background: #ffffff; box-shadow: var(--bevel-in); }
+html[data-theme="webcore"] .steps li.done .step-bar,
+html[data-theme="webcore"] .steps li.current .step-bar { background: #000080; }
+html[data-theme="webcore"] .steps { color: #404040; }
+
+/* Timer as a segmented progress bar */
+html[data-theme="webcore"] .timer-track {
+  height: 16px;
+  border-radius: 0;
+  padding: 2px;
+  background: #ffffff;
+  box-shadow: var(--bevel-in);
+}
+html[data-theme="webcore"] .timer-bar {
+  background: repeating-linear-gradient(90deg, #000080 0 8px, transparent 8px 10px);
+}
+
+/* ---------- Reveal and results ---------- */
+
+html[data-theme="webcore"] .points,
+html[data-theme="webcore"] .breakdown dd,
+html[data-theme="webcore"] .combined strong { font-size: 32px; }
+html[data-theme="webcore"] .small-points,
+html[data-theme="webcore"] .breakdown dd { font-size: 22px; }
+html[data-theme="webcore"] .score-panel .scope { color: #1f9c3f; }
+html[data-theme="webcore"] .score-panel .muted { color: #1f9c3f; }
+html[data-theme="webcore"] .score-panel .total strong { color: var(--lcd-ink); font-size: 56px; }
+html[data-theme="webcore"] .score-panel .meter-bar { background: #0a4d1c; }
+html[data-theme="webcore"] .score-panel .meter-bar.on { background: var(--lcd-ink); }
+
+html[data-theme="webcore"] .bars {
+  padding: 4px 4px 0;
+  background: #ffffff;
+  box-shadow: var(--bevel-in);
+  border-bottom: 0;
+}
+html[data-theme="webcore"] .bar { border-radius: 0; background: #000080; }
+html[data-theme="webcore"] .bin.you .bar { background: #ff0000; }
+html[data-theme="webcore"] .you-label { color: #ff0000; font-weight: 700; }
+html[data-theme="webcore"] .axis { font-size: 16px; color: #000000; }
+
+/* ---------- How to play dialog ---------- */
+
+html[data-theme="webcore"] .intro {
+  padding: 3px 3px 16px;
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+  color: #000000;
+}
+html[data-theme="webcore"] .intro > * { margin-left: 16px; margin-right: 16px; }
+html[data-theme="webcore"] .intro > .scope { display: none; }
+html[data-theme="webcore"] .intro h2 {
+  margin: 0;
+  padding: 6px 8px;
+  background: var(--title-bar);
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 16px;
+}
+html[data-theme="webcore"] .intro-steps li,
+html[data-theme="webcore"] .intro-steps li strong { color: #000000; }
+html[data-theme="webcore"] .intro-steps li::marker { font-size: 18px; color: #000080; }
+html[data-theme="webcore"] .intro .muted { color: #1a1a1a; }
+html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); }
