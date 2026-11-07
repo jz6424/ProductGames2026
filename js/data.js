@@ -194,7 +194,7 @@ window.STATIC_DATA = {
       local: [
         {
           id: 'houston-prop-a-freedom-act',
-          // The mayor's comment could mean the measure is harmless or unnecessary, so it points neither way.
+          // The evidence (a similar Dallas measure at about 67%) points to a comfortable win but not the exact share.
           difficulty: 'medium',
           sample: false,
           teaser: 'Should marijuana possession be Houston police\'s lowest priority?',
@@ -207,8 +207,8 @@ window.STATIC_DATA = {
           min: 0,
           max: 100,
           fullCredit: 12,
-          evidence: 'Mayor John Whitmire said low-level marijuana possession had not been a police priority "for some time" and that the department does not serve no-knock warrants.',
-          evidenceSource: { title: 'KPRC Click2Houston: Houston voters to decide on marijuana enforcement and no-knock warrants', url: 'https://www.click2houston.com/news/local/2026/08/12/houston-voters-to-decide-on-marijuana-enforcement-no-knock-warrant-ban-in-november/' },
+          evidence: 'In 2024, Dallas voters approved a similar marijuana measure, Proposition R, with about 67% of the vote.',
+          evidenceSource: { title: 'Ballotpedia: Dallas Proposition R, Marijuana Decriminalization (November 2024)', url: 'https://ballotpedia.org/Dallas,_Texas,_Proposition_R,_Marijuana_Decriminalization_Charter_Amendment_(November_2024)' },
           answer: 71,
           outcome: 'Voters approved Prop A with about 71% yes in unofficial returns with about 70% of precincts counted. The count is not yet certified.',
           why: 'Supporters said police could focus on more serious crimes, while opponents raised concerns about conflicts with state law. Texas\'s attorney general has challenged similar measures in Austin and Dallas in court.',
@@ -284,8 +284,8 @@ window.STATIC_DATA = {
         },
         {
           id: 'nyc-ballot-prop-3',
-          // The evidence names an organized opposition campaign, but most city ballot proposals pass.
-          difficulty: 'easy',
+          // The evidence (last year's charter proposals, 56.7% to 73.2% yes) gives a range but not the exact share.
+          difficulty: 'medium',
           sample: false,
           teaser: 'Should bike and bus lanes get a faster review?',
           setup: 'Proposal 3 would speed up reviews of street safety projects like bike and bus lanes, let the city sell small undevelopable lots without an auction, and end Council approval of city office leases.',
@@ -297,8 +297,8 @@ window.STATIC_DATA = {
           min: 0,
           max: 100,
           fullCredit: 12,
-          evidence: 'The Municipal Art Society of New York ran a "No on Ballot 3" campaign, and some groups that oppose bike lanes also opposed it.',
-          evidenceSource: { title: 'City & State: Understanding the NYC ballot proposals', url: 'https://www.cityandstateny.com/politics/2026/10/understanding-nyc-ballot-proposals/416773/' },
+          evidence: 'In 2025, New York City voters approved four of five charter proposals, with between 56.7% and 73.2% voting yes.',
+          evidenceSource: { title: 'NY1: New Yorkers vote yes for ballot proposals 2 to 5, no for proposal 6 (2025)', url: 'https://ny1.com/nyc/all-boroughs/news/2025/11/05/nyc-general-election-ballot-proposals-2025' },
           answer: 65.7,
           outcome: 'Proposal 3 passed with 65.7% of the vote in unofficial results with about 97% reported. All five proposals passed.',
           why: 'Supporters said it would cut street project timelines by about a third, while opponents wanted to keep more community review.',
