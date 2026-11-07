@@ -113,12 +113,27 @@
     }
   }
 
+  // Seconds at which the on-air sign switches to its amber warning.
+  const WARNING_SECONDS = 5;
+
+  function onAirState(timeLeft) {
+    if (timeLeft <= 0) return 'off';
+    return timeLeft <= WARNING_SECONDS ? 'warning' : 'live';
+  }
+
   function updateTimer(remaining, duration) {
     state.timeLeft = Math.ceil(remaining / 1000);
     const count = document.getElementById('time-left');
     const bar = document.getElementById('time-bar');
+    const sign = document.getElementById('on-air');
+    const label = document.getElementById('on-air-label');
     if (count) count.textContent = String(state.timeLeft);
     if (bar) bar.style.transform = 'scaleX(' + remaining / duration + ')';
+    if (sign) {
+      const status = onAirState(state.timeLeft);
+      sign.dataset.state = status;
+      if (label) label.textContent = status === 'off' ? 'Off air' : 'On air';
+    }
   }
 
   function startRound(idx) {
@@ -301,12 +316,17 @@
   function gutScreen(story) {
     return `
       <section class="screen">
+        <div id="on-air" class="on-air" data-state="${onAirState(state.timeLeft)}" role="timer" aria-label="Seconds left for your gut call">
+          <span class="on-air-lamp" aria-hidden="true"></span>
+          <span id="on-air-label" class="on-air-label">On air</span>
+          <span class="on-air-count"><strong id="time-left">${state.timeLeft}</strong><span class="on-air-unit">s</span></span>
+        </div>
         ${story.sample ? '<span class="tag">Sample story</span>' : ''}
         <p class="setup">${esc(story.setup)}</p>
         <h2 class="question">${esc(story.question)}</h2>
         <div class="spacer"></div>
         <div class="timer">
-          <span><strong id="time-left">${state.timeLeft}</strong> seconds left for your gut call</span>
+          <span>Time left for your gut call</span>
           <span class="timer-track"><span id="time-bar" class="timer-bar" style="transform: scaleX(${state.timeLeft / DATA.gutSeconds})"></span></span>
         </div>
         <div class="choice-row">

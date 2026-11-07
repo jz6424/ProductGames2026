@@ -466,6 +466,55 @@ a.source-link:hover { background: var(--raised); }
 }
 .freq { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--text-2); }
 
+/* On-air countdown sign on the gut call. The warning is one state change,
+   never a pulse or blink. */
+.on-air {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 8px;
+  background: #0d0c0b;
+  transition: border-color 180ms var(--ease);
+}
+.on-air-lamp {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text);
+}
+.on-air-label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+.on-air-count {
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid var(--hairline-strong);
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.on-air-count strong { font-size: 18px; line-height: 24px; font-weight: 500; }
+.on-air-unit { font-size: 12px; line-height: 16px; color: var(--muted); }
+
+.on-air[data-state="warning"] { border-color: var(--accent); }
+.on-air[data-state="warning"] .on-air-lamp,
+.on-air[data-state="warning"] .on-air-label,
+.on-air[data-state="warning"] .on-air-count { color: var(--accent); background-color: transparent; }
+.on-air[data-state="warning"] .on-air-lamp { background: var(--accent); }
+.on-air[data-state="warning"] .on-air-count strong { font-size: 28px; line-height: 32px; }
+
+.on-air[data-state="off"] .on-air-lamp { background: var(--hairline-strong); }
+.on-air[data-state="off"] .on-air-label,
+.on-air[data-state="off"] .on-air-count { color: var(--muted); }
+
 /* Score readout on the results screen */
 .score-panel {
   padding: 16px 20px;
