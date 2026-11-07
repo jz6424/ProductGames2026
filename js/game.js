@@ -607,41 +607,48 @@
     return scoreWave(state.results.reduce((sum, r) => sum + r.points, 0));
   }
 
-  const wave = Object.assign({ phase: 0, frame: 0 }, scoreWave(0));
+  const wave = scoreWave(0);
 
   function hash(x, seed) {
     const v = Math.sin(x * 12.9898 + seed * 78.233) * 43758.5453;
     return v - Math.floor(v) - 0.5;
   }
 
+  // The wave keeps its jagged shape and slowly scrolls sideways, like an
+  // oscilloscope. It never moves up and down. Its jaggedness matches the
+  // current score, and a high score also gives the line a soft glow.
+  const WAVE_SCROLL_SPEED = 0.35; // how far the line slides each frame (wave units, 350 = full width)
+  let waveOffset = 0;
+  const WAVE_GLOW_BELOW_NOISE = 10; // glow starts once the noise drops below this
+  const WAVE_MAX_GLOW = 7; // glow size in pixels for a perfectly clean signal
+
   function drawWave() {
     const path = document.getElementById('wave-path');
     if (!path) return;
-    if (reduceMotion) {
-      const target = waveTarget();
-      wave.amplitude = target.amplitude;
-      wave.noise = target.noise;
-    }
-    const seed = Math.floor(wave.frame / 3);
+    Object.assign(wave, waveTarget());
     const points = [];
     for (let x = 0; x <= 350; x += 4) {
-      const jitter = hash(x, seed) * 2 * wave.noise;
-      const y = 28 + wave.amplitude * Math.sin((2 * Math.PI * 4 * x) / 350 + wave.phase) + jitter;
+      // u is the point's place along the endless line; blend between fixed
+      // jitter points so the jagged shape slides smoothly instead of twitching.
+      const u = x + waveOffset;
+      const cell = Math.floor(u / 4);
+      const t = u / 4 - cell;
+      const jitter = (hash(cell, 0) * (1 - t) + hash(cell + 1, 0) * t) * 2 * wave.noise;
+      const y = 28 + wave.amplitude * Math.sin((2 * Math.PI * 4 * u) / 350) + jitter;
       points.push(x + ' ' + Math.min(54, Math.max(2, y)).toFixed(1));
     }
     path.setAttribute('d', 'M' + points.join(' L'));
+
+    const glow = Math.max(0, (WAVE_GLOW_BELOW_NOISE - wave.noise) / WAVE_GLOW_BELOW_NOISE) * WAVE_MAX_GLOW;
+    path.style.filter = glow > 0.3 ? 'drop-shadow(0 0 ' + glow.toFixed(1) + 'px ' + getComputedStyle(path).stroke + ')' : '';
   }
 
-  function animate() {
-    const target = waveTarget();
-    wave.amplitude += (target.amplitude - wave.amplitude) * 0.06;
-    wave.noise += (target.noise - wave.noise) * 0.06;
-    wave.phase += 0.05;
-    wave.frame += 1;
+  function scrollWave() {
+    waveOffset += WAVE_SCROLL_SPEED;
     drawWave();
-    window.requestAnimationFrame(animate);
+    window.requestAnimationFrame(scrollWave);
   }
 
   render();
-  if (!reduceMotion) window.requestAnimationFrame(animate);
+  if (!reduceMotion) window.requestAnimationFrame(scrollWave);
 })();
