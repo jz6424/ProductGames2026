@@ -21,7 +21,10 @@ html[data-theme="webcore"] {
   --pos: #006b00;
   --neg: #b00000;
   --font-body: Tahoma, Verdana, 'Segoe UI', sans-serif;
-  --font-mono: 'VT323', 'Courier New', monospace;
+  --font-mono: Tahoma, Verdana, 'Segoe UI', sans-serif;
+  --font-title: 'Trebuchet MS', 'Lucida Grande', Tahoma, sans-serif;
+  --font-lcd: 'VT323', 'Courier New', monospace;
+  --title-shadow: 1px 1px 0 #0a1a5c;
 
   --title-bar: linear-gradient(90deg, #000080, #1084d0);
   --bevel-out: inset -1px -1px #404040, inset 1px 1px #ffffff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
@@ -53,7 +56,8 @@ html[data-theme="webcore"] .phone::before {
   padding: 0 32px 0 8px;
   background: var(--title-bar);
   color: #ffffff;
-  font: 700 13px/1 var(--font-body);
+  font: 700 15px/1 var(--font-title);
+  text-shadow: var(--title-shadow);
 }
 html[data-theme="webcore"] .phone::after {
   content: "\00d7";
@@ -95,10 +99,11 @@ html[data-theme="webcore"] .phone::after {
 /* ---------- Type ---------- */
 
 html[data-theme="webcore"] h1,
-html[data-theme="webcore"] h2 { font-weight: 700; }
+html[data-theme="webcore"] h2 { font-family: var(--font-title); font-weight: 700; }
 html[data-theme="webcore"] .home h1 { color: #000080; letter-spacing: -0.01em; }
 html[data-theme="webcore"] .brand {
-  font-family: 'Arial Black', Impact, var(--font-body);
+  font-family: var(--font-title);
+  font-weight: 700;
   font-size: 26px;
   font-style: italic;
   background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd700, #00c853, #00b0ff, #7c4dff);
@@ -107,7 +112,7 @@ html[data-theme="webcore"] .brand {
   color: transparent;
   -webkit-text-stroke: 1px #000000;
 }
-html[data-theme="webcore"] .city { font-family: var(--font-mono); font-size: 18px; color: #000080; }
+html[data-theme="webcore"] .city { font-size: 13px; font-weight: 700; color: #000080; }
 
 /* ---------- Raised buttons ---------- */
 
@@ -146,7 +151,7 @@ html[data-theme="webcore"] .confidence.selected {
   color: #ffffff;
   box-shadow: var(--bevel-in);
 }
-html[data-theme="webcore"] .stakes { font-size: 18px; color: #000080; }
+html[data-theme="webcore"] .stakes { font-size: 13px; color: #000080; }
 html[data-theme="webcore"] .confidence.selected .stakes { color: #ffffff; }
 html[data-theme="webcore"] .confidence.selected .meter-bar.on { background: #ffff00; }
 
@@ -175,7 +180,10 @@ html[data-theme="webcore"] .reveal .card > .scope {
   padding: 4px 8px;
   background: var(--title-bar);
   color: #ffffff;
+  font-family: var(--font-title);
+  font-size: 15px;
   font-weight: 700;
+  text-shadow: var(--title-shadow);
 }
 html[data-theme="webcore"] .reveal .card > .scope { margin: -16px -16px 0; }
 html[data-theme="webcore"] .evidence-card { padding: 20px; padding-top: 20px; }
@@ -192,10 +200,12 @@ html[data-theme="webcore"] .score-panel {
   box-shadow: var(--bevel-in);
   color: var(--lcd-ink);
 }
+html[data-theme="webcore"] .lcd,
+html[data-theme="webcore"] .score-panel .total strong { font-family: var(--font-lcd); }
 html[data-theme="webcore"] .lcd-freq { font-size: 28px; line-height: 24px; }
 html[data-theme="webcore"] .lcd-band { color: #1f9c3f; font-size: 16px; }
 html[data-theme="webcore"] .station .scope { font-weight: 700; }
-html[data-theme="webcore"] .round-meta { font-size: 16px; }
+html[data-theme="webcore"] .round-meta { font-size: 12px; }
 
 html[data-theme="webcore"] .scope-screen {
   border: 0;
@@ -207,18 +217,18 @@ html[data-theme="webcore"] .scope-screen {
   box-shadow: var(--bevel-in);
 }
 html[data-theme="webcore"] .wave path { stroke: var(--lcd-ink); stroke-width: 2; }
-html[data-theme="webcore"] .signal-label { font-size: 16px; color: #000080; }
+html[data-theme="webcore"] .signal-label { font-size: 12px; font-weight: 700; color: #000080; }
 
 html[data-theme="webcore"] .meter-bar { background: #808080; border-radius: 0; }
 html[data-theme="webcore"] .meter-bar.on { background: #008000; }
 html[data-theme="webcore"] .tick { background: #808080; }
 html[data-theme="webcore"] .tick.major { background: #000000; }
-html[data-theme="webcore"] .tick-label { font-size: 16px; color: #000000; }
+html[data-theme="webcore"] .tick-label { font-size: 11px; color: #000000; }
 html[data-theme="webcore"] .needle { background: #ff0000; border-radius: 0; }
 html[data-theme="webcore"] .dial-scale { border-bottom-color: #000000; }
-html[data-theme="webcore"] .preset-mark { font-size: 16px; color: #000000; }
-html[data-theme="webcore"] .preset-key { font-size: 18px; box-shadow: var(--bevel-out); }
-html[data-theme="webcore"] .freq { font-size: 16px; color: #000080; }
+html[data-theme="webcore"] .preset-mark { font-size: 11px; font-weight: 700; color: #000000; }
+html[data-theme="webcore"] .preset-key { font-size: 14px; font-weight: 700; box-shadow: var(--bevel-out); }
+html[data-theme="webcore"] .freq { font-size: 12px; font-weight: 700; color: #000080; }
 
 /* Step progress as chunky blocks */
 html[data-theme="webcore"] .step-bar { height: 8px; border-radius: 0; background: #ffffff; box-shadow: var(--bevel-in); }
@@ -240,11 +250,12 @@ html[data-theme="webcore"] .timer-bar {
 
 /* ---------- Reveal and results ---------- */
 
+html[data-theme="webcore"] .points { font-family: var(--font-title); font-weight: 700; }
 html[data-theme="webcore"] .points,
 html[data-theme="webcore"] .breakdown dd,
-html[data-theme="webcore"] .combined strong { font-size: 32px; }
+html[data-theme="webcore"] .combined strong { font-family: var(--font-title); font-size: 24px; font-weight: 700; }
 html[data-theme="webcore"] .small-points,
-html[data-theme="webcore"] .breakdown dd { font-size: 22px; }
+html[data-theme="webcore"] .breakdown dd { font-size: 15px; font-weight: 700; }
 html[data-theme="webcore"] .score-panel .scope { color: #1f9c3f; }
 html[data-theme="webcore"] .score-panel .muted { color: #1f9c3f; }
 html[data-theme="webcore"] .score-panel .total strong { color: var(--lcd-ink); font-size: 56px; }
@@ -260,7 +271,7 @@ html[data-theme="webcore"] .bars {
 html[data-theme="webcore"] .bar { border-radius: 0; background: #000080; }
 html[data-theme="webcore"] .bin.you .bar { background: #ff0000; }
 html[data-theme="webcore"] .you-label { color: #ff0000; font-weight: 700; }
-html[data-theme="webcore"] .axis { font-size: 16px; color: #000000; }
+html[data-theme="webcore"] .axis { font-size: 12px; color: #000000; }
 
 /* ---------- How to play dialog ---------- */
 
@@ -279,11 +290,14 @@ html[data-theme="webcore"] .intro h2 {
   padding: 6px 8px;
   background: var(--title-bar);
   color: #ffffff;
-  font-size: 14px;
+  font-family: var(--font-title);
+  font-size: 15px;
   line-height: 16px;
+  text-shadow: var(--title-shadow);
 }
 html[data-theme="webcore"] .intro-steps li,
 html[data-theme="webcore"] .intro-steps li strong { color: #000000; }
-html[data-theme="webcore"] .intro-steps li::marker { font-size: 18px; color: #000080; }
+html[data-theme="webcore"] .intro-steps strong { font-weight: 700; }
+html[data-theme="webcore"] .intro-steps li::marker { font-size: 14px; font-weight: 700; color: #000080; }
 html[data-theme="webcore"] .intro .muted { color: #1a1a1a; }
 html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); }
