@@ -20,9 +20,9 @@ html[data-theme="webcore"] {
   --accent-surface: #000080;
   --pos: #006b00;
   --neg: #b00000;
-  --font-body: 'Pixelify Sans', Tahoma, Verdana, sans-serif;
-  --font-mono: 'Pixelify Sans', Tahoma, Verdana, sans-serif;
-  --font-title: 'Press Start 2P', 'Courier New', monospace;
+  --font-body: 'Press Start 2P', 'Courier New', monospace;
+  --font-mono: 'Press Start 2P', 'Courier New', monospace;
+  --font-title: 'Trebuchet MS', 'Lucida Grande', Tahoma, sans-serif;
   --font-lcd: 'VT323', 'Courier New', monospace;
   --title-shadow: 1px 1px 0 #0a1a5c;
 
@@ -62,7 +62,7 @@ html[data-theme="webcore"] .phone::before {
   padding: 0 32px 0 8px;
   background: var(--title-bar);
   color: #ffffff;
-  font: 400 11px/1 var(--font-title);
+  font: 700 15px/1 var(--font-title);
   text-shadow: var(--title-shadow);
 }
 /* Close box in the title bar: a real button that goes back to the start */
@@ -112,16 +112,13 @@ html[data-theme="webcore"] .window-close::before { content: ""; position: absolu
 /* ---------- Type ---------- */
 
 html[data-theme="webcore"] h1,
-html[data-theme="webcore"] h2 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; line-height: 1.5; }
-html[data-theme="webcore"] .home h1 { color: #000080; font-size: 22px; letter-spacing: 0; line-height: 1.5; }
-html[data-theme="webcore"] .question { font-size: 15px; line-height: 1.6; }
-html[data-theme="webcore"] .reveal-head h2 { font-size: 18px; line-height: 1.4; }
-html[data-theme="webcore"] .learn h2 { font-size: 16px; line-height: 1.6; }
+html[data-theme="webcore"] h2 { font-family: var(--font-title); font-weight: 700; }
+html[data-theme="webcore"] .home h1 { color: #000080; letter-spacing: -0.01em; }
 html[data-theme="webcore"] .brand {
   font-family: var(--font-title);
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 1.2;
+  font-weight: 700;
+  font-size: 26px;
+  font-style: italic;
   background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd700, #00c853, #00b0ff, #7c4dff);
   -webkit-background-clip: text;
   background-clip: text;
@@ -197,9 +194,8 @@ html[data-theme="webcore"] .reveal .card > .scope {
   background: var(--title-bar);
   color: #ffffff;
   font-family: var(--font-title);
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 700;
   text-shadow: var(--title-shadow);
 }
 html[data-theme="webcore"] .reveal .card > .scope { margin: -16px -16px 0; }
@@ -278,10 +274,10 @@ html[data-theme="webcore"] .neon-sign {
 html[data-theme="webcore"] .on-air[data-flicker] .neon-sign { animation: none; opacity: 1; }
 html[data-theme="webcore"] .neon-text {
   font-family: var(--font-title);
-  font-size: 16px;
+  font-size: 24px;
   line-height: 32px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   color: #ffffff;
   text-shadow: 1px 1px 0 #3d0000;
 }
@@ -324,10 +320,10 @@ html[data-theme="webcore"] .on-air[data-state="off"] .digital-clock { color: #1f
 
 /* ---------- Reveal and results ---------- */
 
-html[data-theme="webcore"] .points { font-family: var(--font-body); font-weight: 700; }
+html[data-theme="webcore"] .points { font-family: var(--font-title); font-weight: 700; }
 html[data-theme="webcore"] .points,
 html[data-theme="webcore"] .breakdown dd,
-html[data-theme="webcore"] .combined strong { font-family: var(--font-body); font-size: 24px; font-weight: 700; }
+html[data-theme="webcore"] .combined strong { font-family: var(--font-title); font-size: 24px; font-weight: 700; }
 html[data-theme="webcore"] .small-points,
 html[data-theme="webcore"] .breakdown dd { font-size: 15px; font-weight: 700; }
 html[data-theme="webcore"] .score-panel .scope { color: #1f9c3f; }
@@ -365,8 +361,7 @@ html[data-theme="webcore"] .intro h2 {
   background: var(--title-bar);
   color: #ffffff;
   font-family: var(--font-title);
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 15px;
   line-height: 16px;
   text-shadow: var(--title-shadow);
 }
@@ -377,6 +372,47 @@ html[data-theme="webcore"] .intro-steps li::marker { font-size: 14px; font-weigh
 html[data-theme="webcore"] .intro .muted { color: #1a1a1a; }
 html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); }
 
+/* ---------- Press Start 2P text sizes ---------- */
+
+/* Press Start 2P is the main text font. Its letters are about twice as wide
+   as a normal sans, so text here is much smaller than in styles.css, with
+   extra line height so the blocky letters stay readable. It has a single
+   weight, so faux bold is switched off. Headers stay Trebuchet MS. */
+html[data-theme="webcore"] body { font-size: 12px; line-height: 1.8; font-synthesis: none; }
+html[data-theme="webcore"] p,
+html[data-theme="webcore"] .teaser,
+html[data-theme="webcore"] .outcome,
+html[data-theme="webcore"] .intro,
+html[data-theme="webcore"] .intro-steps { font-size: 11px; line-height: 20px; }
+html[data-theme="webcore"] .setup,
+html[data-theme="webcore"] .evidence-card p,
+html[data-theme="webcore"] .home h1 + p { font-size: 12px; line-height: 22px; }
+html[data-theme="webcore"] .small,
+html[data-theme="webcore"] .scope,
+html[data-theme="webcore"] .label,
+html[data-theme="webcore"] .question-row,
+html[data-theme="webcore"] .breakdown,
+html[data-theme="webcore"] .timer,
+html[data-theme="webcore"] .dist-meta,
+html[data-theme="webcore"] .footnote,
+html[data-theme="webcore"] .city,
+html[data-theme="webcore"] .freq,
+html[data-theme="webcore"] .round-meta,
+html[data-theme="webcore"] .signal-label,
+html[data-theme="webcore"] .steps,
+html[data-theme="webcore"] .stakes,
+html[data-theme="webcore"] .tick-label,
+html[data-theme="webcore"] .preset-mark,
+html[data-theme="webcore"] .axis,
+html[data-theme="webcore"] .you-label { font-size: 9px; line-height: 16px; }
+html[data-theme="webcore"] .primary,
+html[data-theme="webcore"] .confidence,
+html[data-theme="webcore"] .preset-key { font-size: 12px; }
+html[data-theme="webcore"] .ghost { font-size: 10px; }
+html[data-theme="webcore"] .choice { font-size: 14px; }
+/* Without bold, the How to play lead-ins stand out by color instead */
+html[data-theme="webcore"] .intro-steps li strong { color: #000080; }
+
 /* ---------- Wide screens ---------- */
 
 @media (min-width: 900px) {
@@ -386,7 +422,16 @@ html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); 
     border-right: 1px solid #808080;
     box-shadow: 1px 0 #ffffff;
   }
-  html[data-theme="webcore"] .home h1 { font-size: 34px; letter-spacing: 0; }
-  html[data-theme="webcore"] .question { font-size: 26px; }
-  html[data-theme="webcore"] .reveal-head h2 { font-size: 24px; }
+  html[data-theme="webcore"] .home h1 { font-size: 52px; letter-spacing: -0.02em; }
+  html[data-theme="webcore"] .setup,
+  html[data-theme="webcore"] .evidence-card p,
+  html[data-theme="webcore"] .home h1 + p { font-size: 14px; line-height: 26px; }
+  html[data-theme="webcore"] p,
+  html[data-theme="webcore"] .teaser,
+  html[data-theme="webcore"] .outcome { font-size: 12px; line-height: 22px; }
+  html[data-theme="webcore"] .small,
+  html[data-theme="webcore"] .scope,
+  html[data-theme="webcore"] .question-row,
+  html[data-theme="webcore"] .breakdown,
+  html[data-theme="webcore"] .timer { font-size: 10px; line-height: 18px; }
 }
