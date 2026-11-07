@@ -54,7 +54,7 @@ html[data-theme="webcore"] .phone {
   padding: 3px;
 }
 html[data-theme="webcore"] .phone::before {
-  content: "Static.exe - 88.1 FM";
+  content: "Static.exe - " attr(data-station);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -454,7 +454,7 @@ html[data-theme="webcore"] .stakes,
 html[data-theme="webcore"] .tick-label,
 html[data-theme="webcore"] .preset-mark,
 html[data-theme="webcore"] .axis,
-html[data-theme="webcore"] .you-label { font-size: 9px; line-height: 16px; }
+html[data-theme="webcore"] .you-label { font-size: 10px; line-height: 16px; }
 html[data-theme="webcore"] .primary,
 html[data-theme="webcore"] .confidence,
 html[data-theme="webcore"] .preset-key { font-size: 12px; }

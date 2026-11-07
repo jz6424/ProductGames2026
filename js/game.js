@@ -64,10 +64,10 @@
       note = 'Your instinct was right, and you stayed with it';
     } else if (finalRight && state.gut === null) {
       label = 'Good final call';
-      note = 'You missed the gut call, but the evidence got you there';
+      note = 'You missed the gut call, but the evidence led you to the right answer';
     } else if (finalRight) {
       label = 'Great update';
-      note = 'The evidence changed your mind, and it paid off';
+      note = 'The evidence changed your mind, and your final call was right';
     } else if (gutRight) {
       label = 'Talked out of it';
       note = 'Your first instinct was right this time';
@@ -584,6 +584,8 @@
     app.innerHTML = closeButton + (inRound ? roundHeader(story) : '') + body;
     // Wide screens lay rounds out in two columns: radio panel and story.
     app.classList.toggle('in-round', inRound);
+    // The webcore title bar names the station being played.
+    app.dataset.station = inRound ? story.frequency + ' FM' : DATA.city;
     window.scrollTo(0, 0);
     drawWave();
   }
