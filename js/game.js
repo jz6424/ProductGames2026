@@ -38,6 +38,10 @@
     return 'No call';
   }
 
+  function gutSentence(value) {
+    return value ? 'Your gut said ' + answerWord(value) + '.' : 'You didn\'t make a gut call.';
+  }
+
   function findConfidence(id) {
     return DATA.confidence.find((c) => c.id === id);
   }
@@ -54,7 +58,7 @@
     const finalPoints = finalRight ? conf.right : conf.wrong;
 
     let label = 'Fooled twice';
-    let note = 'Here is what the evidence was missing.';
+    let note = 'Your gut call and your final call were both wrong.';
     if (gutRight && finalRight) {
       label = 'Called it';
       note = 'Your instinct was right, and you stayed with it.';
@@ -69,7 +73,7 @@
       note = 'Your first instinct was right this time.';
     } else if (state.gut === null) {
       label = 'Missed it';
-      note = 'The clock ran out on your gut call, and the final call missed too.';
+      note = 'The timer ran out on your gut call, and your final call was wrong.';
     }
 
     return { gutPoints, finalPoints, total: gutPoints + finalPoints, label, note };
@@ -165,7 +169,7 @@
     },
     share() {
       const total = state.results.reduce((sum, r) => sum + r.points, 0);
-      const text = 'I scored ' + signed(total) + ' on today\'s Static broadcast. Can you beat it?';
+      const text = 'I scored ' + signed(total) + ' in today\'s Static game. Can you beat it?';
       const done = (label) => go({ shareLabel: label });
       try {
         navigator.clipboard.writeText(text).then(() => done('Copied to clipboard'), () => done('Copy not available'));
@@ -185,7 +189,7 @@
   // ---------- Templates ----------
 
   const STEPS = [['gut', 'Gut call'], ['evidence', 'Evidence'], ['final', 'Final call']];
-  const SIGNAL = { gut: 'Weak signal', evidence: 'Getting clearer', final: 'Strong signal', reveal: 'Clear signal' };
+  const SIGNAL = { gut: 'Headline only', evidence: 'New evidence added', final: 'All information shown', reveal: 'Outcome revealed' };
 
   function roundHeader(story) {
     const current = STEPS.findIndex((s) => s[0] === state.screen);
@@ -202,7 +206,7 @@
           <span class="scope">${esc(story.scopeLabel)}</span>
           <span>Story ${state.idx + 1} of ${DATA.stories.length}</span>
         </div>
-        <svg class="wave" viewBox="0 0 350 56" preserveAspectRatio="none" role="img" aria-label="${SIGNAL[state.screen]} radio wave">
+        <svg class="wave" viewBox="0 0 350 56" preserveAspectRatio="none" role="img" aria-label="Radio wave, ${SIGNAL[state.screen].toLowerCase()}">
           <path id="wave-path" d=""></path>
         </svg>
         <div class="signal-label">${SIGNAL[state.screen]}</div>
@@ -217,8 +221,8 @@
           <span class="brand">STATIC</span>
           <span class="city">${esc(DATA.city.toUpperCase())}</span>
         </div>
-        <h1>Call it first. Find out instantly.</h1>
-        <p class="muted">Three real stories, about three minutes, and your score right away.</p>
+        <h1>Guess how real news stories turned out.</h1>
+        <p class="muted">You get a score right after each story, and a full round takes about three minutes.</p>
         <ul class="story-list">
           ${DATA.stories.map((s) => `
             <li class="card">
@@ -226,9 +230,9 @@
               <span class="teaser">${esc(s.teaser)}</span>
             </li>`).join('')}
         </ul>
-        <p class="muted small">See where your score lands among other players.</p>
+        <p class="muted small">At the end, you can see how your score compares with other players.</p>
         <div class="spacer"></div>
-        <button type="button" class="primary" data-action="start">Play today's broadcast</button>
+        <button type="button" class="primary" data-action="start">Start today's game</button>
         <p class="footnote">Real stories from the week of Nov 3, 2026, with sample crowd data</p>
       </section>`;
   }
@@ -241,7 +245,7 @@
         <h2 class="question">${esc(story.question)}</h2>
         <div class="spacer"></div>
         <div class="timer">
-          <span>Go with your gut: <strong id="time-left">${state.timeLeft}</strong>s</span>
+          <span><strong id="time-left">${state.timeLeft}</strong> seconds left for your gut call</span>
           <span class="timer-track"><span id="time-bar" class="timer-bar" style="width: ${(state.timeLeft / DATA.gutSeconds) * 100}%"></span></span>
         </div>
         <div class="choice-row">
@@ -260,14 +264,14 @@
       <section class="screen">
         <div class="question-row">
           <span>${esc(story.question)}</span>
-          <span class="nowrap">Gut: ${answerWord(state.gut)}</span>
+          <span class="nowrap">${gutSentence(state.gut)}</span>
         </div>
         <div class="evidence-card">
           <span class="scope">New evidence</span>
           <p>${esc(story.evidence)}</p>
           <span class="muted small">Source: ${sourceHtml}</span>
         </div>
-        <p class="muted">Does this change your mind? Switching costs nothing.</p>
+        <p class="muted">You can keep or change your answer on the next screen. Changing it has no penalty.</p>
         <div class="spacer"></div>
         <button type="button" class="primary" data-action="toFinal">Make my final call</button>
       </section>`;
@@ -280,9 +284,9 @@
     return `
       <section class="screen">
         <h2 class="question">${esc(story.question)}</h2>
-        <p class="muted small">Your gut said: ${answerWord(state.gut)}</p>
+        <p class="muted small">${gutSentence(state.gut)}</p>
         <div class="choice-row">${pick('no')}${pick('yes')}</div>
-        <span class="label">Tune your confidence</span>
+        <span class="label">How confident are you?</span>
         <div class="confidence-list">
           ${DATA.confidence.map((c) => `
             <button type="button" class="confidence ${state.conf === c.id ? 'selected' : ''}" aria-pressed="${state.conf === c.id}" data-action="conf" data-value="${c.id}">
@@ -291,7 +295,7 @@
             </button>`).join('')}
         </div>
         <div class="spacer"></div>
-        <button type="button" class="primary" data-action="lock" ${ready ? '' : 'disabled'}>Lock frequency</button>
+        <button type="button" class="primary" data-action="lock" ${ready ? '' : 'disabled'}>Lock in my answer</button>
       </section>`;
   }
 
@@ -315,7 +319,7 @@
           <div><dt>Final call: ${answerWord(state.final)}, ${conf.label}</dt><dd>${signed(round.finalPoints)}</dd></div>
         </dl>
         <hr>
-        <p class="small strong">Sample crowd: ${crowdYes}% said Yes.</p>
+        <p class="small strong">${crowdYes}% of the sample crowd said Yes.</p>
         <p class="small">${esc(story.why)}</p>
         <div class="spacer"></div>
         <button type="button" class="primary" data-action="next">${state.idx < DATA.stories.length - 1 ? 'Next story' : 'See my results'}</button>
@@ -338,7 +342,7 @@
 
     return `
       <section class="screen summary">
-        <span class="scope">Today's broadcast</span>
+        <span class="scope">Today's score</span>
         <div class="total"><strong>${signed(total)}</strong><span class="muted">total points</span></div>
         <ul class="result-list">
           ${state.results.map((r, i) => `
@@ -353,7 +357,7 @@
               </div>
             </li>`).join('')}
         </ul>
-        <div class="combined"><span class="strong">National + Global score</span><strong>${signed(combined)}</strong></div>
+        <div class="combined"><span class="strong">National and global score</span><strong>${signed(combined)}</strong></div>
         <div class="dist-meta"><span class="strong">All players today</span><span>Sample data</span></div>
         <p class="strong">You scored higher than about ${percentile}% of players.</p>
         <figure class="histogram" role="img" aria-label="Score distribution. You scored higher than about ${percentile}% of players.">
@@ -388,7 +392,7 @@
               ? `<a class="source-link" href="${esc(link.url)}" target="_blank" rel="noopener">${esc(link.title)}</a>`
               : `<span class="source-link placeholder">${esc(link.title)} <span class="muted small">Link to add</span></span>`).join('')}
           </div>`).join('')}
-        <p class="muted small">Links are grouped by source type. We show who is speaking instead of rating outlets by political leaning.</p>
+        <p class="muted small">We group links by source type and show who is speaking, instead of rating outlets by political leaning.</p>
       </section>`;
   }
 
