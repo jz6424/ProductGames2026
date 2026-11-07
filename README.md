@@ -24,7 +24,7 @@ Each entry in `cities` has a `ranked` list of its top five local stories, shown 
 - `supporters` and `opponents`: one line each for a story with two clear sides, shown side by side under the setup. Use `extra` instead for a story without sides; it shows as an Additional info box.
 - `type`: leave it out for a Yes or No question, or set `'dial'` for a question answered with a number on a radio dial.
 - Yes or No questions: `answer` (`"yes"` or `"no"`) and `sampleCrowdYes`, the share of the sample crowd that answered Yes, from 0 to 1.
-- Dial questions: `unit` (`'%'`, or `''` for something like a year), `min` and `max` for the ends of the dial, a numeric `answer`, and `sampleCrowdGuess`, the sample crowd's guess, shown as a marker on the reveal. `fullCredit` is how far off a guess can be before it earns nothing. It defaults to a quarter of the range, so set it for narrow ranges like years. Keep the range narrow enough that the dial shows about six labels.
+- Dial questions: `unit` (`'%'`, or `''` for something like a year), `min` and `max` for the ends of the dial, a numeric `answer`, and `sampleCrowdGuess`, the sample crowd's guess, shown as a marker on the reveal. `fullCredit` is how far off a guess can be before it earns nothing. It defaults to a quarter of the range, which is too forgiving for a 0 to 100% scale, so the vote-share dials set it to 12 and the year and youth-vote dials set their own. Keep the range narrow enough that the dial shows about six labels.
 - `sources`: the Learn more links, grouped by source type. Set a link's `url` to make it clickable. Links with `url: null` are hidden until they have one.
 
 ## Themes
