@@ -580,7 +580,8 @@
     if (state.screen === 'reveal') body = revealScreen(story);
     if (state.screen === 'summary') body = summaryScreen();
     if (state.screen === 'learn') body = learnScreen();
-    app.innerHTML = (inRound ? roundHeader(story) : '') + body;
+    const closeButton = '<button type="button" class="window-close" data-action="home" aria-label="Back to the start" title="Back to the start">&times;</button>';
+    app.innerHTML = closeButton + (inRound ? roundHeader(story) : '') + body;
     // Wide screens lay rounds out in two columns: radio panel and story.
     app.classList.toggle('in-round', inRound);
     window.scrollTo(0, 0);

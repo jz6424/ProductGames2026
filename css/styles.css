@@ -92,6 +92,9 @@ button:focus-visible, a:focus-visible {
 
 .spacer { flex-grow: 1; }
 
+/* Title-bar close button, shown only by the webcore theme */
+.window-close { display: none; }
+
 /* ---------- Type ---------- */
 
 h1, h2 { margin: 0; font-weight: 500; }

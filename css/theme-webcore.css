@@ -65,20 +65,27 @@ html[data-theme="webcore"] .phone::before {
   font: 700 15px/1 var(--font-title);
   text-shadow: var(--title-shadow);
 }
-html[data-theme="webcore"] .phone::after {
-  content: "\00d7";
+/* Close box in the title bar: a real button that goes back to the start */
+html[data-theme="webcore"] .window-close {
   position: absolute;
+  z-index: 5;
   top: 7px;
   right: 8px;
   width: 20px;
   height: 18px;
+  padding: 0;
+  border: 0;
   display: grid;
   place-items: center;
   background: #c0c0c0;
   box-shadow: var(--bevel-out);
   color: #000000;
-  font: 700 14px/1 var(--font-body);
+  font: 700 14px/1 Tahoma, Verdana, sans-serif;
+  cursor: pointer;
 }
+html[data-theme="webcore"] .window-close:active { box-shadow: var(--bevel-in); }
+/* A bigger invisible hit area, since the drawn box is small */
+html[data-theme="webcore"] .window-close::before { content: ""; position: absolute; inset: -12px; }
 
 @media (min-width: 600px) {
   html[data-theme="webcore"] body { padding-bottom: 72px; }
