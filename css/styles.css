@@ -199,19 +199,18 @@ p { margin: 0; }
 /* ---------- Home ---------- */
 
 .home { padding-top: 32px; gap: 20px; }
-.brand-row { display: flex; justify-content: space-between; align-items: baseline; }
+.brand-row { display: flex; justify-content: space-between; align-items: center; }
 /*
   Logo: "Static" tunes in. It starts blurred and split into offset red and
   cyan slices like a weak channel, jitters, then locks into a clean word.
   After that, it picks up static as the pointer comes near: game.js sets
   --static (0 to 1) plus random --shift-a, --shift-b and --skew values.
-  A short signal wave scrolls underneath.
 */
 .brand { position: relative; display: inline-flex; flex-direction: column; gap: 4px; cursor: default; }
 .brand-word {
   position: relative;
   display: inline-block;
-  font-size: 18px;
+  font-size: 30px;
   line-height: 1;
   font-weight: 600;
   opacity: calc(1 - var(--static, 0) * 0.3);
@@ -242,15 +241,6 @@ p { margin: 0; }
   animation: tune-slice-b 1.2s steps(10, end) backwards;
 }
 
-.brand-wave { display: block; width: 100%; height: 8px; overflow: hidden; }
-.brand-wave path {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
-  animation: brand-wave-scroll 2.4s linear infinite;
-}
-
 @keyframes tune-word {
   0% { opacity: 0.35; filter: blur(1.5px); transform: skewX(-10deg) translateX(-2px); }
   40% { opacity: 0.6; filter: blur(1px); transform: skewX(6deg) translateX(2px); }
@@ -269,13 +259,9 @@ p { margin: 0; }
   60% { opacity: 0.8; transform: translateX(2px); }
   100% { opacity: 0; transform: none; }
 }
-@keyframes brand-wave-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-20px); }
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .brand-word, .brand-word::before, .brand-word::after, .brand-wave path { animation: none; }
+  .brand-word, .brand-word::before, .brand-word::after { animation: none; }
 }
 .city { font-size: 14px; color: var(--text-2); }
 .home h1 { font-size: 36px; line-height: 1.05; letter-spacing: -0.02em; }

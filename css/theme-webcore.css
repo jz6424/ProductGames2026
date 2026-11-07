@@ -104,13 +104,11 @@ html[data-theme="webcore"] .home h1 { color: #000080; letter-spacing: -0.01em; }
 html[data-theme="webcore"] .brand-word {
   font-family: var(--font-title);
   font-weight: 700;
-  font-size: 28px;
+  font-size: 44px;
   font-style: italic;
   color: var(--face);
   text-shadow: -1px -1px 0 #ffffff, 1px 1px 0 var(--extrude), 2px 2px 0 var(--extrude), 3px 3px 0 var(--extrude), 4px 4px 3px rgba(0, 0, 0, 0.3);
 }
-html[data-theme="webcore"] .brand-wave { height: 10px; }
-html[data-theme="webcore"] .brand-wave path { stroke: #00a040; stroke-width: 2; }
 html[data-theme="webcore"] .city { font-size: 13px; font-weight: 700; color: #000080; }
 
 /* ---------- 3D headers ---------- */

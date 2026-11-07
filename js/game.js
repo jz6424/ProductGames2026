@@ -724,16 +724,6 @@
       .filter((group) => group.stations.length);
   }
 
-  // A small sine wave under the logo. It is one period longer than it shows,
-  // so sliding it left by one period loops without a jump.
-  function brandWave() {
-    const points = [];
-    for (let x = 0; x <= 120; x += 2) {
-      points.push(x + ' ' + (4 + 2.5 * Math.sin((2 * Math.PI * x) / 20)).toFixed(2));
-    }
-    return `<svg class="brand-wave" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><path d="M${points.join(' L')}"></path></svg>`;
-  }
-
   function homeScreen() {
     return `
       <section class="screen home">
@@ -741,7 +731,6 @@
           <div class="brand-row">
             <span class="brand" role="img" aria-label="Static">
               <span class="brand-word" data-text="Static" aria-hidden="true">Static</span>
-              ${brandWave()}
             </span>
             <button type="button" class="city city-button" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>
           </div>
