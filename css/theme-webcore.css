@@ -591,9 +591,20 @@ html[data-theme="webcore"] .city-option { min-height: 44px; padding-top: 4px; pa
 /* The close box sits in the menu's title bar, like the game window's */
 html[data-theme="webcore"] .city-menu .menu-close { top: 7px; right: 8px; width: 20px; height: 18px; }
 html[data-theme="webcore"] .city-stories { padding: 12px; background: #ffffff; box-shadow: var(--bevel-in); }
-html[data-theme="webcore"] .city-ranked { padding-left: 32px; font-size: 11px; line-height: 18px; }
+html[data-theme="webcore"] .city-ranked { padding-left: 32px; font-size: 11px; line-height: 16px; }
 html[data-theme="webcore"] .city-ranked li::marker { color: #000080; }
 html[data-theme="webcore"] .ranked-title { font-weight: 400; color: #000000; }
+html[data-theme="webcore"] .city-ranked li + li { border-top: 1px dotted #808080; }
+html[data-theme="webcore"] .game-tag {
+  margin-top: 1px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 0;
+  background: #000080;
+  color: #ffffff;
+  font-size: 8px;
+  line-height: 12px;
+}
 
 /* ---------- Wide screens ---------- */
 

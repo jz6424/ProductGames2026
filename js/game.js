@@ -378,8 +378,11 @@
           <ol class="city-ranked">
             ${preview.ranked.map((story, i) => `
               <li>
-                <span class="ranked-title">${esc(story.title)}</span>
-                <span class="muted small">${esc(story.outcome)}${i < preview.local.length ? ' · In the game' : ''}</span>
+                <span class="ranked-head">
+                  <span class="ranked-title">${esc(story.title)}</span>
+                  ${i < preview.local.length ? '<span class="game-tag">In game</span>' : ''}
+                </span>
+                <span class="muted small">${esc(story.outcome)}</span>
               </li>`).join('')}
           </ol>
         </div>

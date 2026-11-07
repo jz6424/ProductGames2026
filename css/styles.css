@@ -851,9 +851,25 @@ a.source-link:hover { background: var(--raised); }
 .city-option-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .city-current { font-size: 11px; line-height: 14px; color: var(--muted); }
 .city-stories { display: flex; flex-direction: column; gap: 8px; }
-.city-ranked { margin: 0; padding-left: 28px; display: flex; flex-direction: column; gap: 8px; }
-.ranked-title, .city-ranked .muted { display: block; }
+.city-ranked { margin: 0; padding-left: 28px; display: flex; flex-direction: column; }
+/* Thin dotted rules between stories; the "In game" tag sits on the title line */
+.city-ranked li { padding: 4px 0; }
+.city-ranked li + li { border-top: 1px dotted var(--hairline-strong); }
+.ranked-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .ranked-title { font-weight: 500; }
+.city-ranked .muted { display: block; }
+.game-tag {
+  flex-shrink: 0;
+  margin-top: 2px;
+  padding: 1px 6px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent-surface);
+  color: var(--accent);
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+}
 .city-menu-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .city-menu-actions .primary { min-height: 40px; }
 
