@@ -1024,6 +1024,59 @@
     }
   }
 
+  // ---------- Logo static ----------
+
+  // The logo picks up static as the pointer comes near it: none beyond
+  // LOGO_STATIC_RANGE pixels from its edge, rising as the pointer closes in,
+  // and mostly static while hovering. A short interval re-rolls the slice
+  // offsets and skew so it jitters like a bad signal.
+  const LOGO_STATIC_RANGE = 320;
+  const LOGO_STATIC_NEAR = 0.8; // static just outside the logo
+  const LOGO_STATIC_HOVER = 0.95; // static while hovering
+  let logoStatic = 0;
+  let logoJitter = null;
+
+  function setLogoVars(brand, level) {
+    const wobble = (size) => ((Math.random() * 2 - 1) * size * level).toFixed(1);
+    brand.style.setProperty('--static', level.toFixed(2));
+    brand.style.setProperty('--shift-a', level ? wobble(8) : '0');
+    brand.style.setProperty('--shift-b', level ? wobble(8) : '0');
+    brand.style.setProperty('--skew', level ? wobble(10) : '0');
+  }
+
+  function jitterLogo() {
+    const brand = document.querySelector('.brand');
+    if (!brand || logoStatic === 0) {
+      window.clearInterval(logoJitter);
+      logoJitter = null;
+      if (brand) setLogoVars(brand, 0);
+      return;
+    }
+    setLogoVars(brand, logoStatic);
+  }
+
+  function logoStaticFrom(event) {
+    const brand = document.querySelector('.brand');
+    if (!brand || reduceMotion) return;
+    const box = brand.getBoundingClientRect();
+    const dx = Math.max(box.left - event.clientX, 0, event.clientX - box.right);
+    const dy = Math.max(box.top - event.clientY, 0, event.clientY - box.bottom);
+    const distance = Math.hypot(dx, dy);
+    logoStatic = distance === 0 ? LOGO_STATIC_HOVER : Math.max(0, 1 - distance / LOGO_STATIC_RANGE) * LOGO_STATIC_NEAR;
+    if (logoStatic > 0 && logoJitter === null) {
+      jitterLogo();
+      logoJitter = window.setInterval(jitterLogo, 70);
+    }
+  }
+
+  document.addEventListener('pointermove', (event) => {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') logoStaticFrom(event);
+  });
+  // Leaving the window tunes the logo back in.
+  document.addEventListener('pointerout', (event) => {
+    if (!event.relatedTarget) logoStatic = 0;
+  });
+
   // ---------- Radio wave ----------
 
   // The wave's clarity follows the running score: more points, smoother
