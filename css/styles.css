@@ -167,6 +167,7 @@ p { margin: 0; }
   cursor: pointer;
 }
 .choice:hover { background: var(--raised); }
+.choice:disabled { background: var(--card); color: var(--muted); cursor: not-allowed; transform: none; }
 .choice.selected {
   border-color: var(--accent);
   background: var(--accent-surface);

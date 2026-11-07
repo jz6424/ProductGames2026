@@ -86,29 +86,36 @@
     render();
   }
 
+  // How long "Off air" stays on screen after the countdown reaches 0.
+  const OFF_AIR_HOLD_MS = 1000;
+
   // The countdown and the bar both read one deadline on every tick, so the bar
-  // empties exactly as the count reaches 0. The round ends on the tick after
-  // the empty bar and the 0 are drawn, never before.
+  // empties exactly as the count reaches 0. At 0 the answer buttons lock, the
+  // sign reads "Off air" for OFF_AIR_HOLD_MS, and then the round moves on.
   function startTimer() {
     stopTimer();
     const duration = DATA.gutSeconds * 1000;
     const startedAt = performance.now();
-    let drawnEmpty = false;
-    timer = window.setInterval(() => {
-      if (drawnEmpty) {
-        stopTimer();
-        go({ gut: null, final: null, screen: 'evidence' });
-        return;
-      }
+    const current = { tick: null, hold: null };
+    timer = current;
+    current.tick = window.setInterval(() => {
       const remaining = Math.max(0, duration - (performance.now() - startedAt));
       updateTimer(remaining, duration);
-      drawnEmpty = remaining === 0;
+      if (remaining > 0) return;
+      window.clearInterval(current.tick);
+      document.querySelectorAll('[data-action="gut"]').forEach((button) => { button.disabled = true; });
+      current.hold = window.setTimeout(() => {
+        if (timer !== current) return;
+        stopTimer();
+        go({ gut: null, final: null, screen: 'evidence' });
+      }, OFF_AIR_HOLD_MS);
     }, 50);
   }
 
   function stopTimer() {
     if (timer !== null) {
-      window.clearInterval(timer);
+      window.clearInterval(timer.tick);
+      window.clearTimeout(timer.hold);
       timer = null;
     }
   }
