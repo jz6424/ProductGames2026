@@ -90,23 +90,6 @@ html[data-theme="webcore"] .window-close::before { content: ""; position: absolu
 @media (min-width: 600px) {
   html[data-theme="webcore"] body { padding-bottom: 72px; }
   html[data-theme="webcore"] .phone { border-radius: 0; }
-  /* Taskbar along the bottom of the desktop */
-  html[data-theme="webcore"] body::after {
-    content: "Static   |   88.1  91.5  96.5  100.7  104.3 FM   |   Seattle";
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    background: #c0c0c0;
-    box-shadow: inset 0 1px #ffffff, inset 0 2px #dfdfdf;
-    color: #000000;
-    font: 700 13px/1 var(--font-body);
-    white-space: pre;
-  }
 }
 
 /* ---------- Type ---------- */
@@ -471,6 +454,85 @@ html[data-theme="webcore"] .intro-steps li strong { color: #000080; }
   html[data-theme="webcore"] .result-row > div:first-child { flex: 1 1 100%; }
   html[data-theme="webcore"] .result-actions { flex: 1 1 100%; justify-content: space-between; }
 }
+
+/* ---------- Taskbar and city menu ---------- */
+
+html[data-theme="webcore"] .pin { width: 20px; height: 24px; }
+html[data-theme="webcore"] .pin-edge { fill: #000000; }
+html[data-theme="webcore"] .pin-body { fill: #e00000; }
+html[data-theme="webcore"] .city-button { color: #000080; font-weight: 400; text-decoration: none; }
+html[data-theme="webcore"] .city-button .pin { width: 15px; height: 18px; }
+
+/* Taskbar along the bottom of the desktop: "Static | [pin] Seattle" */
+@media (min-width: 600px) {
+  html[data-theme="webcore"] .taskbar {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #c0c0c0;
+    box-shadow: inset 0 1px #ffffff, inset 0 2px #dfdfdf;
+    color: #000000;
+  }
+  html[data-theme="webcore"] .taskbar-brand { padding: 0 8px; font: 700 15px/1 var(--font-title); }
+  html[data-theme="webcore"] .taskbar-divider { width: 2px; height: 24px; box-shadow: inset 1px 0 #808080, inset -1px 0 #ffffff; }
+  html[data-theme="webcore"] .taskbar-city {
+    height: 32px;
+    padding: 0 12px 0 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: #c0c0c0;
+    box-shadow: var(--bevel-out);
+    color: #000000;
+    font: 12px/1 var(--font-body);
+    cursor: pointer;
+  }
+  html[data-theme="webcore"] .taskbar-city:active,
+  html[data-theme="webcore"] .taskbar-city[aria-expanded="true"] { box-shadow: var(--bevel-in); }
+}
+
+/* The city menu is a retro dialog window */
+html[data-theme="webcore"] .city-menu {
+  padding: 3px 3px 16px;
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+  color: #000000;
+}
+html[data-theme="webcore"] .city-menu > * { margin-left: 16px; margin-right: 16px; }
+html[data-theme="webcore"] .city-menu > .city-menu-title {
+  margin: 0;
+  padding: 6px 8px;
+  background: var(--title-bar);
+  color: #ffffff;
+  font: 700 15px/16px var(--font-title);
+  text-shadow: var(--title-shadow);
+}
+html[data-theme="webcore"] .city-menu::backdrop { background: rgba(0, 64, 64, 0.6); }
+html[data-theme="webcore"] .city-option {
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+  color: #000000;
+  font-size: 11px;
+}
+html[data-theme="webcore"] .city-option.selected { background: #000080; color: #ffffff; box-shadow: var(--bevel-in); }
+html[data-theme="webcore"] .city-option.selected .city-current { color: #ffffff; }
+html[data-theme="webcore"] .city-current { font-size: 9px; color: #404040; }
+html[data-theme="webcore"] .city-stories { padding: 12px; background: #ffffff; box-shadow: var(--bevel-in); }
+html[data-theme="webcore"] .city-ranked { padding-left: 32px; font-size: 11px; line-height: 18px; }
+html[data-theme="webcore"] .city-ranked li::marker { color: #000080; }
+html[data-theme="webcore"] .ranked-title { font-weight: 400; color: #000000; }
 
 /* ---------- Wide screens ---------- */
 

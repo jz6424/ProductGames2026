@@ -713,3 +713,74 @@ a.source-link:hover { background: var(--raised); }
     padding: 48px 32px;
   }
 }
+
+/* ---------- City picker ---------- */
+
+/* The taskbar belongs to the webcore desktop; the home screen's city label
+   opens the same menu in every theme. */
+.taskbar { display: none; }
+
+.pin { width: 10px; height: 12px; flex-shrink: 0; }
+.pin-edge { fill: #1a1208; }
+.pin-body { fill: var(--accent); }
+.pin-shine { fill: #ffffff; }
+
+.city-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+.city-button:hover { color: var(--text); }
+
+.city-menu {
+  width: min(600px, calc(100% - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 24px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-y: auto;
+}
+.city-menu[open] { display: flex; flex-direction: column; gap: 16px; }
+.city-menu::backdrop { background: rgba(18, 17, 15, 0.8); }
+.city-menu-title { font-size: 22px; line-height: 1.2; }
+.city-menu-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.city-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.city-option {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.city-option.selected { border-color: var(--accent); background: var(--accent-surface); }
+.city-current { margin-left: auto; font-size: 12px; color: var(--muted); }
+.city-stories { display: flex; flex-direction: column; gap: 8px; }
+.city-ranked { margin: 0; padding-left: 28px; display: flex; flex-direction: column; gap: 8px; }
+.ranked-title, .city-ranked .muted { display: block; }
+.ranked-title { font-weight: 500; }
+.city-menu-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.city-menu-actions .primary { min-height: 40px; }
+
+@media (min-width: 600px) {
+  .city-menu-body { grid-template-columns: 180px minmax(0, 1fr); }
+}

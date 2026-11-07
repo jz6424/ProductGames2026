@@ -5,6 +5,42 @@
   const app = document.getElementById('app');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ---------- Cities ----------
+
+  const LOCAL_FREQUENCIES = ['88.1', '91.5'];
+  const CITY_KEY = 'static-city';
+
+  function findCity(id) {
+    return DATA.cities.find((city) => city.id === id) || DATA.cities.find((city) => city.id === DATA.defaultCity);
+  }
+
+  // A city's game: its two local stories on 88.1 and 91.5 FM, then the shared
+  // national and global stories. A shared story the city already plays as a
+  // local one (marked with sameAs) is skipped, so nobody gets the same vote twice.
+  function useCity(id) {
+    const city = findCity(id);
+    const playedLocally = city.local.map((story) => story.sameAs).filter(Boolean);
+    DATA.cityId = city.id;
+    DATA.city = city.name;
+    DATA.stories = city.local
+      .map((story, i) => Object.assign({}, story, {
+        scope: 'local',
+        scopeLabel: 'Local · ' + city.name,
+        frequency: LOCAL_FREQUENCIES[i]
+      }))
+      .concat(DATA.sharedStories.filter((story) => !playedLocally.includes(story.id)));
+  }
+
+  function savedCity() {
+    try {
+      return window.localStorage.getItem(CITY_KEY);
+    } catch (err) {
+      return null;
+    }
+  }
+
+  useCity(savedCity() || DATA.defaultCity);
+
   let state = freshState();
   let timer = null;
 
@@ -26,6 +62,19 @@
 
   function esc(value) {
     return String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  }
+
+  // Pixel-art map pin, drawn as one-pixel rows so it stays crisp when scaled.
+  const PIN_EDGE = [[3, 0, 4], [2, 1, 6], [1, 2, 8], [1, 3, 8], [1, 4, 8], [1, 5, 8], [2, 6, 6], [3, 7, 4], [3, 8, 4], [4, 9, 2], [4, 10, 2], [4, 11, 2]];
+  const PIN_BODY = [[3, 1, 4], [2, 2, 6], [2, 3, 6], [2, 4, 6], [2, 5, 6], [3, 6, 4], [4, 7, 2], [4, 8, 2]];
+  const PIN_SHINE = [[4, 3, 2], [4, 4, 2]];
+
+  function pixelRows(rows) {
+    return rows.map(([x, y, w]) => `M${x} ${y}h${w}v1h-${w}z`).join('');
+  }
+
+  function pinIcon() {
+    return `<svg class="pin" viewBox="0 0 10 12" aria-hidden="true" shape-rendering="crispEdges"><path class="pin-edge" d="${pixelRows(PIN_EDGE)}"></path><path class="pin-body" d="${pixelRows(PIN_BODY)}"></path><path class="pin-shine" d="${pixelRows(PIN_SHINE)}"></path></svg>`;
   }
 
   function signed(n) {
@@ -294,6 +343,94 @@
     if (action) action(target.dataset.value);
   });
 
+  // ---------- Taskbar and city menu ----------
+
+  const taskbar = document.getElementById('taskbar');
+  const cityMenu = document.getElementById('city-menu');
+  let menuPreview = DATA.cityId;
+
+  function renderTaskbar() {
+    if (!taskbar) return;
+    taskbar.innerHTML = `
+      <span class="taskbar-brand">Static</span>
+      <span class="taskbar-divider" aria-hidden="true"></span>
+      <button type="button" class="taskbar-city" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>`;
+  }
+
+  // Cities on the left; the previewed city's top five local stories on the
+  // right, with the first two marked as the ones in the game.
+  function renderCityMenu() {
+    const preview = findCity(menuPreview);
+    cityMenu.innerHTML = `
+      <h2 id="city-menu-title" class="city-menu-title">Choose your city</h2>
+      <div class="city-menu-body">
+        <ul class="city-list">
+          ${DATA.cities.map((city) => `
+            <li>
+              <button type="button" class="city-option ${city.id === preview.id ? 'selected' : ''}" aria-pressed="${city.id === preview.id}" data-city-preview="${city.id}">
+                ${pinIcon()}<span>${esc(city.name)}</span>${city.id === DATA.cityId ? '<span class="city-current">Playing</span>' : ''}
+              </button>
+            </li>`).join('')}
+        </ul>
+        <div class="city-stories">
+          <span class="label">Top local stories in ${esc(preview.name)}</span>
+          <ol class="city-ranked">
+            ${preview.ranked.map((story, i) => `
+              <li>
+                <span class="ranked-title">${esc(story.title)}</span>
+                <span class="muted small">${esc(story.outcome)}${i < preview.local.length ? ' · In the game' : ''}</span>
+              </li>`).join('')}
+          </ol>
+        </div>
+      </div>
+      <div class="city-menu-actions">
+        <button type="button" class="ghost" data-city-close>Cancel</button>
+        <button type="button" class="primary" data-city-choose="${preview.id}">Tune in to ${esc(preview.name)}</button>
+      </div>`;
+  }
+
+  function openCityMenu() {
+    if (!cityMenu) return;
+    menuPreview = DATA.cityId;
+    renderCityMenu();
+    if (typeof cityMenu.showModal === 'function') cityMenu.showModal();
+    else cityMenu.setAttribute('open', '');
+  }
+
+  function closeCityMenu() {
+    if (typeof cityMenu.close === 'function') cityMenu.close();
+    else cityMenu.removeAttribute('open');
+  }
+
+  // Switching cities starts a fresh game with that city's local stories.
+  function chooseCity(id) {
+    useCity(id);
+    try {
+      window.localStorage.setItem(CITY_KEY, DATA.cityId);
+    } catch (err) {
+      // Storage can be blocked; the city still applies for this visit.
+    }
+    stopTimer();
+    state = freshState();
+    closeCityMenu();
+    renderTaskbar();
+    render();
+  }
+
+  document.addEventListener('click', (event) => {
+    const opener = event.target.closest('[data-city-menu]');
+    const preview = event.target.closest('[data-city-preview]');
+    const choose = event.target.closest('[data-city-choose]');
+    const close = event.target.closest('[data-city-close]');
+    if (opener) openCityMenu();
+    if (preview) {
+      menuPreview = preview.dataset.cityPreview;
+      renderCityMenu();
+    }
+    if (choose) chooseCity(choose.dataset.cityChoose);
+    if (close) closeCityMenu();
+  });
+
   // ---------- Templates ----------
 
   const STEPS = [['gut', 'Gut call'], ['evidence', 'Evidence'], ['final', 'Final call']];
@@ -377,7 +514,7 @@
         <div class="home-intro">
           <div class="brand-row">
             <span class="brand">Static</span>
-            <span class="city">${esc(DATA.city)}</span>
+            <button type="button" class="city city-button" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>
           </div>
           <h1>Guess how real news stories turned out</h1>
           <p class="muted">You get a score right after each story, and a full round takes about five minutes</p>
@@ -684,6 +821,7 @@
     window.requestAnimationFrame(scrollWave);
   }
 
+  renderTaskbar();
   render();
   if (!reduceMotion) window.requestAnimationFrame(scrollWave);
 })();
