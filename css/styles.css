@@ -264,6 +264,23 @@ p { margin: 0; }
   .brand-word, .brand-word::before, .brand-word::after { animation: none; }
 }
 .city { font-size: 14px; color: var(--text-2); }
+.brand-actions { display: flex; align-items: center; gap: 12px; }
+/* Reopens How to play. The webcore taskbar has its own button on wide
+   screens, so this one shows on phones and in the dark theme. */
+.home-help {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 50%;
+  background: var(--raised);
+  color: var(--text);
+  font: 600 15px/1 var(--font-body);
+  cursor: pointer;
+}
+.home-help:hover { background: var(--card); }
 .home h1 { font-size: 36px; line-height: 1.05; letter-spacing: -0.02em; }
 .home h1 + p { font-size: 16px; line-height: 24px; }
 

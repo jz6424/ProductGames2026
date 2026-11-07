@@ -606,6 +606,18 @@ html[data-theme="webcore"] .freq-chip {
 
 /* ---------- Taskbar and city menu ---------- */
 
+html[data-theme="webcore"] .home-help {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 0;
+  background: #000080;
+  box-shadow: inset -1px -1px 0 #00004a, inset 1px 1px 0 #4a6cff, 1px 1px 0 #000000;
+  color: #ffffff;
+  font: 700 15px/1 var(--font-title);
+}
+html[data-theme="webcore"] .home-help:active { box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.5); }
+
 html[data-theme="webcore"] .pin { width: 20px; height: 24px; }
 html[data-theme="webcore"] .pin-edge { fill: #000000; }
 html[data-theme="webcore"] .pin-body { fill: #e00000; }
@@ -644,6 +656,8 @@ html[data-theme="webcore"] .city-button .pin { width: 15px; height: 18px; }
     font: 12px/1 var(--font-body);
     cursor: pointer;
   }
+  /* On wide screens the taskbar's button replaces the home one */
+  html[data-theme="webcore"] .home-help { display: none; }
   /* How to play sits at the far right of the taskbar */
   html[data-theme="webcore"] .taskbar-help { margin-left: auto; }
   html[data-theme="webcore"] .help-icon {

@@ -742,7 +742,10 @@
             <span class="brand" role="img" aria-label="Static">
               <span class="brand-word" data-text="Static" aria-hidden="true">Static</span>
             </span>
-            <button type="button" class="city city-button" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>
+            <div class="brand-actions">
+              <button type="button" class="city city-button" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>
+              <button type="button" class="home-help" data-open-intro aria-haspopup="dialog" aria-label="How to play" title="How to play">?</button>
+            </div>
           </div>
           <h1>Guess how real news stories turned out</h1>
           <p class="muted">You get a score right after each story, and a full round takes about five minutes</p>
