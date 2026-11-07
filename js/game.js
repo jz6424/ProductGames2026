@@ -363,12 +363,13 @@
     const preview = findCity(menuPreview);
     cityMenu.innerHTML = `
       <h2 id="city-menu-title" class="city-menu-title">Choose your city</h2>
+      <button type="button" class="window-close menu-close" data-city-close aria-label="Close the city menu" title="Close">&times;</button>
       <div class="city-menu-body">
         <ul class="city-list">
           ${DATA.cities.map((city) => `
             <li>
               <button type="button" class="city-option ${city.id === preview.id ? 'selected' : ''}" aria-pressed="${city.id === preview.id}" data-city-preview="${city.id}">
-                ${pinIcon()}<span>${esc(city.name)}</span>${city.id === DATA.cityId ? '<span class="city-current">Playing</span>' : ''}
+                ${pinIcon()}<span class="city-option-text"><span>${esc(city.name)}</span>${city.id === DATA.cityId ? '<span class="city-current">Playing</span>' : ''}</span>
               </button>
             </li>`).join('')}
         </ul>
@@ -429,6 +430,12 @@
     }
     if (choose) chooseCity(choose.dataset.cityChoose);
     if (close) closeCityMenu();
+    // A click on the dimmed backdrop lands on the dialog itself, outside its box.
+    if (event.target === cityMenu) {
+      const box = cityMenu.getBoundingClientRect();
+      const outside = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+      if (outside) closeCityMenu();
+    }
   });
 
   // ---------- Templates ----------

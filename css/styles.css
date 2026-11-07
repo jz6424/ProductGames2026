@@ -754,7 +754,24 @@ a.source-link:hover { background: var(--raised); }
 }
 .city-menu[open] { display: flex; flex-direction: column; gap: 16px; }
 .city-menu::backdrop { background: rgba(18, 17, 15, 0.8); }
-.city-menu-title { font-size: 22px; line-height: 1.2; }
+.city-menu { position: fixed; }
+.city-menu-title { font-size: 22px; line-height: 1.2; padding-right: 40px; }
+/* Close button in the menu's corner (webcore restyles it as a title-bar box) */
+.city-menu .menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 8px;
+  background: var(--raised);
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+}
 .city-menu-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .city-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
 .city-option {
@@ -773,7 +790,8 @@ a.source-link:hover { background: var(--raised); }
   cursor: pointer;
 }
 .city-option.selected { border-color: var(--accent); background: var(--accent-surface); }
-.city-current { margin-left: auto; font-size: 12px; color: var(--muted); }
+.city-option-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.city-current { font-size: 11px; line-height: 14px; color: var(--muted); }
 .city-stories { display: flex; flex-direction: column; gap: 8px; }
 .city-ranked { margin: 0; padding-left: 28px; display: flex; flex-direction: column; gap: 8px; }
 .ranked-title, .city-ranked .muted { display: block; }
