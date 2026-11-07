@@ -213,9 +213,9 @@
   }
 
   function startRound(idx) {
-    // Each round starts on a fresh, noisy signal instead of easing in from the last screen.
-    Object.assign(wave, WAVE_TARGETS.gut);
     state = Object.assign({}, state, { screen: 'gut', idx, gut: null, final: null, conf: null, timeLeft: DATA.gutSeconds });
+    // A new game starts from the zero-point signal instead of easing in from the last game.
+    if (idx === 0) Object.assign(wave, waveTarget());
     render();
     startTimer();
   }
@@ -589,23 +589,28 @@
 
   // ---------- Radio wave ----------
 
-  const WAVE_TARGETS = {
-    gut: { amplitude: 8, noise: 22 },
-    evidence: { amplitude: 13, noise: 11 },
-    final: { amplitude: 18, noise: 5 },
-    reveal: { amplitude: 22, noise: 0 }
-  };
-  const wave = { amplitude: 8, noise: 22, phase: 0, frame: 0 };
+  // The wave's clarity follows the running score: more points, smoother
+  // signal; negative points, choppier. Points are only added on the reveal,
+  // so the wave holds steady through each round and then eases to its new
+  // shape once that round is scored.
+  const WAVE_START_NOISE = 16;
+  const WAVE_NOISE_PER_POINT = 0.07;
+  const WAVE_MAX_NOISE = 26;
+
+  function scoreWave(total) {
+    const noise = Math.min(WAVE_MAX_NOISE, Math.max(0, WAVE_START_NOISE - total * WAVE_NOISE_PER_POINT));
+    return { amplitude: 22 - noise * 0.4, noise };
+  }
+
+  function waveTarget() {
+    return scoreWave(state.results.reduce((sum, r) => sum + r.points, 0));
+  }
+
+  const wave = Object.assign({ phase: 0, frame: 0 }, scoreWave(0));
 
   function hash(x, seed) {
     const v = Math.sin(x * 12.9898 + seed * 78.233) * 43758.5453;
     return v - Math.floor(v) - 0.5;
-  }
-
-  function waveTarget() {
-    const target = Object.assign({}, WAVE_TARGETS[state.screen] || WAVE_TARGETS.reveal);
-    if (state.screen === 'final' && state.conf) target.noise = 2;
-    return target;
   }
 
   function drawWave() {
