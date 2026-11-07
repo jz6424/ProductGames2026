@@ -252,6 +252,8 @@ p { margin: 0; }
   background-position: 0 8px, 0 0;
 }
 .wave { width: 100%; height: 56px; display: block; }
+/* Static specks drawn by the webcore theme at low scores */
+.wave .wave-static { fill: var(--accent); stroke: none; opacity: 0.5; shape-rendering: crispEdges; }
 .wave path {
   fill: none;
   stroke: var(--accent);

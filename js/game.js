@@ -363,6 +363,7 @@
         ${tunerDial(state.idx, true)}
         <div class="scope-screen">
           <svg class="wave" viewBox="0 0 350 56" preserveAspectRatio="none" role="img" aria-label="Radio wave, ${SIGNAL[state.screen].toLowerCase()}">
+            <path id="wave-static" class="wave-static" d=""></path>
             <path id="wave-path" d=""></path>
           </svg>
         </div>
@@ -635,10 +636,40 @@
   const WAVE_GLOW_BELOW_NOISE = 10; // glow starts once the noise drops below this
   const WAVE_MAX_GLOW = 7; // glow size in pixels for a perfectly clean signal
 
+  // Webcore only: low scores make the signal grainy. The line snaps to a
+  // coarser grid and is drawn in pixel steps, and specks of static flicker
+  // on the screen. Grain fades out as the noise drops below WAVE_GRAIN_FROM.
+  const WAVE_GRAIN_FROM = 6; // noise level where grain starts
+  const WAVE_GRAIN_FULL = 26; // noise level with the most grain
+  const WAVE_MAX_SPECKS = 70; // static specks on screen at full grain
+
+  function waveGrain() {
+    if (document.documentElement.dataset.theme !== 'webcore') return 0;
+    return Math.min(1, Math.max(0, (wave.noise - WAVE_GRAIN_FROM) / (WAVE_GRAIN_FULL - WAVE_GRAIN_FROM)));
+  }
+
+  function drawStatic(grain) {
+    const specks = document.getElementById('wave-static');
+    if (!specks) return;
+    // A new scatter every few frames, so the static flickers.
+    const seed = Math.floor(waveOffset / 1.4);
+    const count = Math.round(grain * WAVE_MAX_SPECKS);
+    let d = '';
+    for (let i = 0; i < count; i += 1) {
+      const sx = Math.floor((hash(i, seed) + 0.5) * 348);
+      const sy = Math.floor((hash(i + 500, seed) + 0.5) * 54);
+      d += 'M' + sx + ' ' + sy + 'h2v2h-2z';
+    }
+    specks.setAttribute('d', d);
+  }
+
   function drawWave() {
     const path = document.getElementById('wave-path');
     if (!path) return;
     Object.assign(wave, waveTarget());
+    const grain = waveGrain();
+    // Vertical snapping grows with grain: 1 unit when clean, up to 5 when grainy.
+    const snap = 1 + grain * 4;
     const points = [];
     for (let x = 0; x <= 350; x += 4) {
       // u is the point's place along the endless line; blend between fixed
@@ -648,9 +679,17 @@
       const t = u / 4 - cell;
       const jitter = (hash(cell, 0) * (1 - t) + hash(cell + 1, 0) * t) * 2 * wave.noise;
       const y = 28 + wave.amplitude * Math.sin((2 * Math.PI * 4 * u) / 350) + jitter;
-      points.push(x + ' ' + Math.min(54, Math.max(2, y)).toFixed(1));
+      const clamped = Math.min(54, Math.max(2, y));
+      points.push([x, grain > 0 ? Math.round(clamped / snap) * snap : clamped]);
     }
-    path.setAttribute('d', 'M' + points.join(' L'));
+    // Grainy signals step across and then up or down, like a low-resolution screen.
+    const segments = points.map(([x, y], i) => {
+      if (i === 0) return 'M' + x + ' ' + y.toFixed(1);
+      return grain > 0 ? 'H' + x + 'V' + y.toFixed(1) : 'L' + x + ' ' + y.toFixed(1);
+    });
+    path.setAttribute('d', segments.join(' '));
+    path.style.shapeRendering = grain > 0 ? 'crispEdges' : '';
+    drawStatic(grain);
 
     const glow = Math.max(0, (WAVE_GLOW_BELOW_NOISE - wave.noise) / WAVE_GLOW_BELOW_NOISE) * WAVE_MAX_GLOW;
     path.style.filter = glow > 0.3 ? 'drop-shadow(0 0 ' + glow.toFixed(1) + 'px ' + getComputedStyle(path).stroke + ')' : '';
