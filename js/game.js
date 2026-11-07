@@ -199,8 +199,50 @@
   const STEPS = [['gut', 'Gut call'], ['evidence', 'Evidence'], ['final', 'Final call']];
   const SIGNAL = { gut: 'Headline only', evidence: 'New evidence added', final: 'All information shown', reveal: 'Outcome revealed' };
 
+  // ---------- Radio parts ----------
+
+  const DIAL_MIN = 88;
+  const DIAL_MAX = 108;
+  const SIGNAL_LEVEL = { gut: 1, evidence: 2, final: 3, reveal: 4 };
+
+  function dialPercent(freq) {
+    return ((parseFloat(freq) - DIAL_MIN) / (DIAL_MAX - DIAL_MIN)) * 100;
+  }
+
+  // An FM tuner scale. The needle sits on the station being played; on the
+  // full-size dial, each story's station is marked with its number.
+  function tunerDial(activeIdx, compact) {
+    let ticks = '';
+    for (let f = DIAL_MIN; f <= DIAL_MAX; f += 1) {
+      const major = f % 4 === 0;
+      ticks += `<span class="tick ${major ? 'major' : ''}" style="left: ${dialPercent(f)}%"></span>`;
+      if (major && !compact) ticks += `<span class="tick-label" style="left: ${dialPercent(f)}%">${f}</span>`;
+    }
+    const presets = compact ? '' : DATA.stories.map((s, i) => `
+      <span class="preset-mark" style="left: ${dialPercent(s.frequency)}%">${i + 1}</span>`).join('');
+    const needle = DATA.stories[activeIdx]
+      ? `<span class="needle" style="left: ${dialPercent(DATA.stories[activeIdx].frequency)}%"></span>`
+      : '';
+    return `<div class="dial ${compact ? 'compact' : ''}" aria-hidden="true">${presets}<div class="dial-scale">${ticks}${needle}</div></div>`;
+  }
+
+  function signalMeter(level, total, label) {
+    let bars = '';
+    for (let n = 1; n <= total; n += 1) {
+      bars += `<span class="meter-bar ${n <= level ? 'on' : ''}" style="height: ${n * 4}px"></span>`;
+    }
+    return label
+      ? `<span class="meter" role="img" aria-label="${esc(label)}">${bars}</span>`
+      : `<span class="meter" aria-hidden="true">${bars}</span>`;
+  }
+
+  function frequencyDisplay(freq) {
+    return `<span class="lcd"><span class="lcd-freq">${esc(freq)}</span><span class="lcd-band">FM</span></span>`;
+  }
+
   function roundHeader(story) {
     const current = STEPS.findIndex((s) => s[0] === state.screen);
+    const level = SIGNAL_LEVEL[state.screen] || 4;
     const steps = current === -1 ? '' : `
       <ol class="steps" aria-label="Round progress">
         ${STEPS.map((s, i) => `
@@ -210,13 +252,20 @@
       </ol>`;
     return `
       <header class="round-header">
-        <div class="round-meta">
-          <span class="scope">${esc(story.scopeLabel)}</span>
-          <span>Story ${state.idx + 1} of ${DATA.stories.length}</span>
+        <div class="faceplate">
+          ${frequencyDisplay(story.frequency)}
+          <div class="station">
+            <span class="scope">${esc(story.scopeLabel)}</span>
+            <span class="round-meta">Story ${state.idx + 1} of ${DATA.stories.length}</span>
+          </div>
+          ${signalMeter(level, 4, 'Signal strength ' + level + ' of 4')}
         </div>
-        <svg class="wave" viewBox="0 0 350 56" preserveAspectRatio="none" role="img" aria-label="Radio wave, ${SIGNAL[state.screen].toLowerCase()}">
-          <path id="wave-path" d=""></path>
-        </svg>
+        ${tunerDial(state.idx, true)}
+        <div class="scope-screen">
+          <svg class="wave" viewBox="0 0 350 56" preserveAspectRatio="none" role="img" aria-label="Radio wave, ${SIGNAL[state.screen].toLowerCase()}">
+            <path id="wave-path" d=""></path>
+          </svg>
+        </div>
         <div class="signal-label">${SIGNAL[state.screen]}</div>
         ${steps}
       </header>`;
@@ -231,11 +280,15 @@
         </div>
         <h1>Guess how real news stories turned out</h1>
         <p class="muted">You get a score right after each story, and a full round takes about three minutes</p>
+        <div class="tuner">${tunerDial(0, false)}</div>
         <ul class="story-list">
-          ${DATA.stories.map((s) => `
-            <li class="card">
-              <span class="scope">${esc(s.scopeLabel)}</span>
-              <span class="teaser">${esc(s.teaser)}</span>
+          ${DATA.stories.map((s, i) => `
+            <li class="card preset-row">
+              <span class="preset-key" aria-hidden="true">${i + 1}</span>
+              <div class="preset-text">
+                <span class="scope"><span class="freq">${esc(s.frequency)} FM</span> · ${esc(s.scopeLabel)}</span>
+                <span class="teaser">${esc(s.teaser)}</span>
+              </div>
             </li>`).join('')}
         </ul>
         <p class="muted small">At the end, you can see how your score compares with other players</p>
@@ -296,9 +349,9 @@
         <div class="choice-row">${pick('no')}${pick('yes')}</div>
         <span class="label">How confident are you?</span>
         <div class="confidence-list">
-          ${DATA.confidence.map((c) => `
+          ${DATA.confidence.map((c, i) => `
             <button type="button" class="confidence ${state.conf === c.id ? 'selected' : ''}" aria-pressed="${state.conf === c.id}" data-action="conf" data-value="${c.id}">
-              <span>${c.label}</span>
+              <span class="confidence-name">${signalMeter(i + 1, DATA.confidence.length)}${c.label}</span>
               <span class="stakes">${signed(c.right)} / ${signed(c.wrong)}</span>
             </button>`).join('')}
         </div>
@@ -350,13 +403,16 @@
 
     return `
       <section class="screen summary">
-        <span class="scope">Today's score</span>
-        <div class="total"><strong>${signed(total)}</strong><span class="muted">total points</span></div>
+        <div class="score-panel">
+          <span class="scope">Today's score</span>
+          <div class="total"><strong>${signed(total)}</strong><span class="muted">total points</span></div>
+          ${signalMeter(state.results.filter((r) => r.points > 0).length, DATA.stories.length, state.results.filter((r) => r.points > 0).length + ' of ' + DATA.stories.length + ' stories scored points')}
+        </div>
         <ul class="result-list">
           ${state.results.map((r, i) => `
             <li class="result-row">
               <div>
-                <span class="muted small">${esc(DATA.stories[r.storyIdx].scopeLabel)}</span>
+                <span class="muted small"><span class="freq">${esc(DATA.stories[r.storyIdx].frequency)}</span> ${esc(DATA.stories[r.storyIdx].scopeLabel)}</span>
                 <span class="strong">${esc(r.label)}</span>
               </div>
               <div class="result-actions">
