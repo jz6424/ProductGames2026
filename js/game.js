@@ -100,7 +100,7 @@
     timer = current;
     current.tick = window.setInterval(() => {
       const remaining = Math.max(0, duration - (performance.now() - startedAt));
-      updateTimer(remaining, duration);
+      updateTimer(remaining);
       if (remaining > 0) return;
       window.clearInterval(current.tick);
       document.querySelectorAll('[data-action="gut"]').forEach((button) => { button.disabled = true; });
@@ -183,7 +183,7 @@
     };
   }
 
-  function updateTimer(remaining, duration) {
+  function updateTimer(remaining) {
     state.timeLeft = Math.ceil(remaining / 1000);
     const count = document.getElementById('time-left');
     const clock = document.getElementById('flip-clock');
@@ -195,7 +195,8 @@
       const digits = clockDigits(state.timeLeft);
       clock.querySelectorAll('.flip-card').forEach((card, i) => flipTo(card, digits[i]));
     }
-    if (bar) bar.style.transform = 'scaleX(' + remaining / duration + ')';
+    // One block per second; the block for each second that has passed goes out.
+    if (bar) bar.querySelectorAll('.timer-block').forEach((block, i) => block.classList.toggle('on', i < state.timeLeft));
     if (sign) {
       const status = onAirState(state.timeLeft);
       sign.dataset.state = status;
@@ -357,27 +358,31 @@
   function homeScreen() {
     return `
       <section class="screen home">
-        <div class="brand-row">
-          <span class="brand">Static</span>
-          <span class="city">${esc(DATA.city)}</span>
+        <div class="home-intro">
+          <div class="brand-row">
+            <span class="brand">Static</span>
+            <span class="city">${esc(DATA.city)}</span>
+          </div>
+          <h1>Guess how real news stories turned out</h1>
+          <p class="muted">You get a score right after each story, and a full round takes about three minutes</p>
+          <div class="spacer"></div>
+          <button type="button" class="primary" data-action="start">Start today's game</button>
+          <p class="footnote">Real stories from the week of Nov 3, 2026, with sample crowd data</p>
         </div>
-        <h1>Guess how real news stories turned out</h1>
-        <p class="muted">You get a score right after each story, and a full round takes about three minutes</p>
-        <div class="tuner">${tunerDial(0, false)}</div>
-        <ul class="story-list">
-          ${DATA.stories.map((s, i) => `
-            <li class="card preset-row">
-              <span class="preset-key" aria-hidden="true">${i + 1}</span>
-              <div class="preset-text">
-                <span class="scope"><span class="freq">${esc(s.frequency)} FM</span> · ${esc(s.scopeLabel)}</span>
-                <span class="teaser">${esc(s.teaser)}</span>
-              </div>
-            </li>`).join('')}
-        </ul>
-        <p class="muted small">At the end, you can see how your score compares with other players</p>
-        <div class="spacer"></div>
-        <button type="button" class="primary" data-action="start">Start today's game</button>
-        <p class="footnote">Real stories from the week of Nov 3, 2026, with sample crowd data</p>
+        <div class="home-stations">
+          <div class="tuner">${tunerDial(0, false)}</div>
+          <ul class="story-list">
+            ${DATA.stories.map((s, i) => `
+              <li class="card preset-row">
+                <span class="preset-key" aria-hidden="true">${i + 1}</span>
+                <div class="preset-text">
+                  <span class="scope"><span class="freq">${esc(s.frequency)} FM</span> · ${esc(s.scopeLabel)}</span>
+                  <span class="teaser">${esc(s.teaser)}</span>
+                </div>
+              </li>`).join('')}
+          </ul>
+          <p class="muted small">At the end, you can see how your score compares with other players</p>
+        </div>
       </section>`;
   }
 
@@ -398,7 +403,7 @@
         <div class="spacer"></div>
         <div class="timer">
           <span>Time left for your gut call</span>
-          <span class="timer-track"><span id="time-bar" class="timer-bar" style="transform: scaleX(${state.timeLeft / DATA.gutSeconds})"></span></span>
+          <span id="time-bar" class="timer-track">${Array.from({ length: DATA.gutSeconds }, (_, i) => `<span class="timer-block ${i < state.timeLeft ? 'on' : ''}"></span>`).join('')}</span>
         </div>
         <div class="choice-row">
           <button type="button" class="choice" data-action="gut" data-value="no">No</button>
@@ -568,6 +573,8 @@
     if (state.screen === 'summary') body = summaryScreen();
     if (state.screen === 'learn') body = learnScreen();
     app.innerHTML = (inRound ? roundHeader(story) : '') + body;
+    // Wide screens lay rounds out in two columns: radio panel and story.
+    app.classList.toggle('in-round', inRound);
     window.scrollTo(0, 0);
     drawWave();
   }

@@ -281,13 +281,10 @@ p { margin: 0; }
 .question { font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; }
 .timer { display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px; color: var(--text-2); text-align: center; }
 .timer strong { color: var(--text); font-weight: 500; }
-.timer-track { height: 2px; border-radius: 1px; background: var(--hairline-strong); overflow: hidden; }
-.timer-bar {
-  display: block;
-  height: 100%;
-  background: var(--text);
-  transform-origin: left center;
-}
+/* One block per second; a block goes out each second, with no squeezing */
+.timer-track { display: flex; gap: 2px; height: 4px; }
+.timer-block { flex: 1 1 0; border-radius: 1px; background: var(--hairline-strong); }
+.timer-block.on { background: var(--text); }
 
 /* ---------- Evidence ---------- */
 
@@ -647,4 +644,64 @@ a.source-link:hover { background: var(--raised); }
 @media (prefers-reduced-motion: reduce) {
   .screen { animation: none; }
   .primary, .ghost, .choice, .confidence, .source-link { transition: none; }
+}
+
+/* ---------- Home columns ---------- */
+
+/* On phones the two home columns melt into one list, with the start button
+   last. Wide screens split them into an intro column and a stations column. */
+.home-intro, .home-stations { display: contents; }
+.home-intro > .spacer { order: 1; }
+.home-intro > .primary { order: 2; }
+.home-intro > .footnote { order: 3; }
+
+/* ---------- Wide screens ---------- */
+
+/* Phones and narrow windows keep the phone-sized layout above. From 900px the
+   game becomes a large window: rounds show the radio panel beside the story. */
+@media (min-width: 900px) {
+  body { padding: 40px 32px; }
+  .phone {
+    max-width: 1080px;
+    min-height: min(760px, calc(100vh - 80px));
+  }
+
+  .phone.in-round {
+    display: grid;
+    grid-template-columns: 420px minmax(0, 1fr);
+    align-content: stretch;
+  }
+  .phone.in-round .round-header {
+    padding: 40px 32px;
+    gap: 16px;
+    border-right: 1px solid var(--hairline);
+  }
+  .phone.in-round .wave { height: 120px; }
+  .phone.in-round .screen { padding: 40px 48px; gap: 20px; }
+
+  .setup { font-size: 20px; line-height: 32px; }
+  .question { font-size: 40px; line-height: 1.1; }
+  .evidence-card p { font-size: 22px; line-height: 34px; }
+  .choice { min-height: 64px; font-size: 20px; }
+  .reveal-head h2 { font-size: 36px; }
+
+  .home {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 56px;
+    padding: 56px;
+  }
+  .home-intro, .home-stations { display: flex; flex-direction: column; gap: 24px; }
+  .home-intro > .spacer, .home-intro > .primary, .home-intro > .footnote { order: 0; }
+  .home h1 { font-size: 56px; line-height: 1.02; letter-spacing: -0.03em; }
+  .home h1 + p { font-size: 18px; line-height: 28px; }
+  .home .footnote { text-align: left; }
+
+  .summary, .learn {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 32px;
+  }
 }

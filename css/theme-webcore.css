@@ -236,17 +236,16 @@ html[data-theme="webcore"] .steps li.done .step-bar,
 html[data-theme="webcore"] .steps li.current .step-bar { background: #000080; }
 html[data-theme="webcore"] .steps { color: #404040; }
 
-/* Timer as a segmented progress bar */
+/* Timer as a segmented progress bar, one block per second */
 html[data-theme="webcore"] .timer-track {
-  height: 16px;
-  border-radius: 0;
-  padding: 2px;
+  height: 20px;
+  padding: 3px;
+  gap: 2px;
   background: #ffffff;
   box-shadow: var(--bevel-in);
 }
-html[data-theme="webcore"] .timer-bar {
-  background: repeating-linear-gradient(90deg, #000080 0 8px, transparent 8px 10px);
-}
+html[data-theme="webcore"] .timer-block { border-radius: 0; background: transparent; }
+html[data-theme="webcore"] .timer-block.on { background: #000080; }
 
 /* ---------- Reveal and results ---------- */
 
@@ -301,3 +300,15 @@ html[data-theme="webcore"] .intro-steps strong { font-weight: 700; }
 html[data-theme="webcore"] .intro-steps li::marker { font-size: 14px; font-weight: 700; color: #000080; }
 html[data-theme="webcore"] .intro .muted { color: #1a1a1a; }
 html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); }
+
+/* ---------- Wide screens ---------- */
+
+@media (min-width: 900px) {
+  /* The title bar spans both columns of the round layout */
+  html[data-theme="webcore"] .phone.in-round::before { grid-column: 1 / -1; }
+  html[data-theme="webcore"] .phone.in-round .round-header {
+    border-right: 1px solid #808080;
+    box-shadow: 1px 0 #ffffff;
+  }
+  html[data-theme="webcore"] .home h1 { font-size: 52px; letter-spacing: -0.02em; }
+}
