@@ -452,7 +452,34 @@ a.source-link:hover { background: var(--raised); }
 
 /* Station presets on the home screen */
 .story-list .preset-row { flex-direction: row; align-items: center; gap: 12px; }
-.preset-text { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+/* Home stations grouped under a level chip, each with a frequency chip */
+.station-groups { display: flex; flex-direction: column; gap: 16px; }
+.station-group { display: flex; flex-direction: column; gap: 8px; }
+.level-chip {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 4px;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.freq-chip {
+  flex-shrink: 0;
+  min-width: 56px;
+  padding: 2px 6px;
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  background: #0d0c0b;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
 .preset-key {
   flex-shrink: 0;
   width: 32px;

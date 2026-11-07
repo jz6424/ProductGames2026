@@ -515,6 +515,20 @@
       </header>`;
   }
 
+  // The home screen lists stations under one heading per level, so each row
+  // only needs its preset number, frequency and teaser.
+  function stationGroups() {
+    const levels = [['local', 'Local · ' + DATA.city], ['national', 'National'], ['global', 'Global']];
+    return levels
+      .map(([scope, label]) => ({
+        label,
+        stations: DATA.stories
+          .map((story, i) => ({ story, number: i + 1 }))
+          .filter(({ story }) => story.scope === scope)
+      }))
+      .filter((group) => group.stations.length);
+  }
+
   function homeScreen() {
     return `
       <section class="screen home">
@@ -531,16 +545,20 @@
         </div>
         <div class="home-stations">
           <div class="tuner">${tunerDial(0, false)}</div>
-          <ul class="story-list">
-            ${DATA.stories.map((s, i) => `
-              <li class="card preset-row">
-                <span class="preset-key" aria-hidden="true">${i + 1}</span>
-                <div class="preset-text">
-                  <span class="scope"><span class="freq">${esc(s.frequency)} FM</span> · ${esc(s.scopeLabel)}</span>
-                  <span class="teaser">${esc(s.teaser)}</span>
-                </div>
-              </li>`).join('')}
-          </ul>
+          <div class="station-groups">
+            ${stationGroups().map((group) => `
+              <section class="station-group" aria-label="${esc(group.label)} stories">
+                <span class="level-chip">${esc(group.label)}</span>
+                <ul class="story-list">
+                  ${group.stations.map(({ story, number }) => `
+                    <li class="card preset-row">
+                      <span class="preset-key" aria-hidden="true">${number}</span>
+                      <span class="freq-chip">${esc(story.frequency)}</span>
+                      <span class="teaser">${esc(story.teaser)}</span>
+                    </li>`).join('')}
+                </ul>
+              </section>`).join('')}
+          </div>
           <p class="muted small">At the end, you can see how your score compares with other players</p>
         </div>
       </section>`;

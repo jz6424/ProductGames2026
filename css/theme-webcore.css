@@ -455,6 +455,32 @@ html[data-theme="webcore"] .intro-steps li strong { color: #000080; }
   html[data-theme="webcore"] .result-actions { flex: 1 1 100%; justify-content: space-between; }
 }
 
+/* ---------- Home station chips ---------- */
+
+/* Level headings are small raised tags; frequencies are tiny green LCDs */
+html[data-theme="webcore"] .level-chip {
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+  color: #000000;
+  font-size: 9px;
+  line-height: 12px;
+}
+html[data-theme="webcore"] .freq-chip {
+  min-width: 54px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 0;
+  background: var(--lcd-bg);
+  box-shadow: var(--bevel-in);
+  color: var(--lcd-ink);
+  font-family: var(--font-lcd);
+  font-size: 24px;
+  line-height: 20px;
+}
+
 /* ---------- Taskbar and city menu ---------- */
 
 html[data-theme="webcore"] .pin { width: 20px; height: 24px; }
