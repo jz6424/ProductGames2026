@@ -22,7 +22,7 @@ html[data-theme="webcore"] {
   --neg: #b00000;
   --font-body: 'Pixelify Sans', Tahoma, Verdana, sans-serif;
   --font-mono: 'Pixelify Sans', Tahoma, Verdana, sans-serif;
-  --font-title: 'Trebuchet MS', 'Lucida Grande', Tahoma, sans-serif;
+  --font-title: 'Press Start 2P', 'Courier New', monospace;
   --font-lcd: 'VT323', 'Courier New', monospace;
   --title-shadow: 1px 1px 0 #0a1a5c;
 
@@ -62,7 +62,7 @@ html[data-theme="webcore"] .phone::before {
   padding: 0 32px 0 8px;
   background: var(--title-bar);
   color: #ffffff;
-  font: 700 15px/1 var(--font-title);
+  font: 400 11px/1 var(--font-title);
   text-shadow: var(--title-shadow);
 }
 /* Close box in the title bar: a real button that goes back to the start */
@@ -112,13 +112,16 @@ html[data-theme="webcore"] .window-close::before { content: ""; position: absolu
 /* ---------- Type ---------- */
 
 html[data-theme="webcore"] h1,
-html[data-theme="webcore"] h2 { font-family: var(--font-title); font-weight: 700; }
-html[data-theme="webcore"] .home h1 { color: #000080; letter-spacing: -0.01em; }
+html[data-theme="webcore"] h2 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; line-height: 1.5; }
+html[data-theme="webcore"] .home h1 { color: #000080; font-size: 22px; letter-spacing: 0; line-height: 1.5; }
+html[data-theme="webcore"] .question { font-size: 15px; line-height: 1.6; }
+html[data-theme="webcore"] .reveal-head h2 { font-size: 18px; line-height: 1.4; }
+html[data-theme="webcore"] .learn h2 { font-size: 16px; line-height: 1.6; }
 html[data-theme="webcore"] .brand {
   font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 26px;
-  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
   background: linear-gradient(90deg, #ff0080, #ff8c00, #ffd700, #00c853, #00b0ff, #7c4dff);
   -webkit-background-clip: text;
   background-clip: text;
@@ -194,8 +197,9 @@ html[data-theme="webcore"] .reveal .card > .scope {
   background: var(--title-bar);
   color: #ffffff;
   font-family: var(--font-title);
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
   text-shadow: var(--title-shadow);
 }
 html[data-theme="webcore"] .reveal .card > .scope { margin: -16px -16px 0; }
@@ -274,10 +278,10 @@ html[data-theme="webcore"] .neon-sign {
 html[data-theme="webcore"] .on-air[data-flicker] .neon-sign { animation: none; opacity: 1; }
 html[data-theme="webcore"] .neon-text {
   font-family: var(--font-title);
-  font-size: 24px;
+  font-size: 16px;
   line-height: 32px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   color: #ffffff;
   text-shadow: 1px 1px 0 #3d0000;
 }
@@ -320,10 +324,10 @@ html[data-theme="webcore"] .on-air[data-state="off"] .digital-clock { color: #1f
 
 /* ---------- Reveal and results ---------- */
 
-html[data-theme="webcore"] .points { font-family: var(--font-title); font-weight: 700; }
+html[data-theme="webcore"] .points { font-family: var(--font-body); font-weight: 700; }
 html[data-theme="webcore"] .points,
 html[data-theme="webcore"] .breakdown dd,
-html[data-theme="webcore"] .combined strong { font-family: var(--font-title); font-size: 24px; font-weight: 700; }
+html[data-theme="webcore"] .combined strong { font-family: var(--font-body); font-size: 24px; font-weight: 700; }
 html[data-theme="webcore"] .small-points,
 html[data-theme="webcore"] .breakdown dd { font-size: 15px; font-weight: 700; }
 html[data-theme="webcore"] .score-panel .scope { color: #1f9c3f; }
@@ -361,7 +365,8 @@ html[data-theme="webcore"] .intro h2 {
   background: var(--title-bar);
   color: #ffffff;
   font-family: var(--font-title);
-  font-size: 15px;
+  font-size: 11px;
+  font-weight: 400;
   line-height: 16px;
   text-shadow: var(--title-shadow);
 }
@@ -381,5 +386,7 @@ html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); 
     border-right: 1px solid #808080;
     box-shadow: 1px 0 #ffffff;
   }
-  html[data-theme="webcore"] .home h1 { font-size: 52px; letter-spacing: -0.02em; }
+  html[data-theme="webcore"] .home h1 { font-size: 34px; letter-spacing: 0; }
+  html[data-theme="webcore"] .question { font-size: 26px; }
+  html[data-theme="webcore"] .reveal-head h2 { font-size: 24px; }
 }
