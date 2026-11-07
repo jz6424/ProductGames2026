@@ -15,11 +15,12 @@ window.STATIC_DATA = {
   ],
 
   // Sample spread of National + Global scores, used for the results histogram.
+  // Skewed low for the demo, so a combined score of 50 to 100 beats about 80%.
   // Bin i covers scores from min + i * binSize up to the next bin.
   sampleDistribution: {
     min: -200,
     binSize: 50,
-    counts: [3, 5, 8, 12, 17, 21, 16, 10, 6, 2]
+    counts: [8, 11, 15, 19, 20, 12, 7, 4, 3, 1]
   },
 
   stories: [
