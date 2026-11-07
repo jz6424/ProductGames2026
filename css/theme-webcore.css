@@ -342,6 +342,74 @@ html[data-theme="webcore"] .on-air[data-state="warning"] .digital-clock { color:
 html[data-theme="webcore"] .on-air[data-state="warning"] .digital-clock::before { color: rgba(255, 77, 77, 0.12); }
 html[data-theme="webcore"] .on-air[data-state="off"] .digital-clock { color: #1f6b33; }
 
+/* ---------- Dial questions: sunken panel, LCD readout, slider thumb ---------- */
+
+html[data-theme="webcore"] .guess-dial {
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: var(--bevel-in);
+}
+html[data-theme="webcore"] .guess-dial:focus-visible { outline: 1px dotted #000000; outline-offset: -4px; }
+
+/* The readout is the same green LCD as the countdown clock */
+html[data-theme="webcore"] .guess-readout {
+  gap: 6px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 0;
+  background: var(--lcd-bg);
+  box-shadow: var(--bevel-in);
+  color: var(--lcd-ink);
+}
+html[data-theme="webcore"] .guess-value { font-family: var(--font-lcd); font-size: 44px; line-height: 40px; letter-spacing: 0.04em; }
+html[data-theme="webcore"] .guess-unit { font-family: var(--font-lcd); font-size: 28px; line-height: 40px; color: #1f9c3f; }
+html[data-theme="webcore"] .guess-dial.untouched .guess-value { color: #1f6b33; }
+
+html[data-theme="webcore"] .guess-scale { border-bottom-color: #000000; }
+html[data-theme="webcore"] .guess-tick { background: #808080; }
+html[data-theme="webcore"] .guess-tick.major { background: #000000; }
+html[data-theme="webcore"] .guess-tick-label { font-size: 10px; line-height: 14px; color: #000000; background: #ffffff; }
+html[data-theme="webcore"] .guess-fill { top: 38px; height: 4px; background: #000080; opacity: 1; }
+html[data-theme="webcore"] .guess-dial.untouched .guess-fill { opacity: 0.15; }
+
+/* A red needle like the station dial, with a raised thumb to grab */
+html[data-theme="webcore"] .guess-needle { border-radius: 0; background: #ff0000; box-shadow: none; }
+html[data-theme="webcore"] .guess-thumb {
+  top: -4px;
+  width: 14px;
+  height: 20px;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+}
+html[data-theme="webcore"] .guess-dial.untouched .guess-needle { opacity: 0.6; }
+
+/* Reveal markers as plain tooltip tags */
+html[data-theme="webcore"] .guess-marker.truth { background: #008000; box-shadow: none; }
+html[data-theme="webcore"] .guess-marker.crowd { background: #808080; }
+html[data-theme="webcore"] .guess-marker.you { background: #000080; opacity: 1; }
+html[data-theme="webcore"] .guess-marker-label {
+  padding: 1px 4px;
+  border: 1px solid #000000;
+  border-radius: 0;
+  background: #ffffe1;
+  font-size: 10px;
+  line-height: 14px;
+  color: #404040;
+}
+html[data-theme="webcore"] .guess-marker.truth .guess-marker-label { color: #006b00; border-color: #000000; }
+html[data-theme="webcore"] .guess-marker.you .guess-marker-label { color: #000080; }
+
+/* The timer and answers are meant to stay pinned during the countdown. On wide
+   screens the window clipped its overflow, so the bar never stuck, and a tall
+   dial left the lock button below the fold. Leave the window unclipped and let
+   the bar rest just above the taskbar. */
+@media (min-width: 600px) {
+  html[data-theme="webcore"] .phone { overflow: visible; }
+  html[data-theme="webcore"] .gut-actions { bottom: 40px; }
+}
+
 /* ---------- Reveal and results ---------- */
 
 html[data-theme="webcore"] .points { font-family: var(--font-title); font-weight: 700; }

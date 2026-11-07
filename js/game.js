@@ -87,8 +87,38 @@
     return 'No call';
   }
 
-  function gutSentence(value) {
-    return value ? 'Your gut said ' + answerWord(value) : 'You didn\'t make a gut call';
+  // A story is a Yes or No question unless it sets type: 'dial', which asks
+  // for a number the player tunes on a radio dial instead.
+  function isDial(story) {
+    return story.type === 'dial';
+  }
+
+  function guessPercent(story, value) {
+    return ((value - story.min) / (story.max - story.min)) * 100;
+  }
+
+  function guessMidpoint(story) {
+    return Math.round((story.min + story.max) / 2);
+  }
+
+  // How far off a dial guess can be before it earns nothing.
+  function fullCredit(story) {
+    return story.fullCredit || (story.max - story.min) * 0.25;
+  }
+
+  function formatDial(story, value) {
+    const text = Number.isInteger(value) ? String(value) : value.toFixed(1);
+    return text + (story.unit || '');
+  }
+
+  // A gut or final call as text, for either kind of question.
+  function callWord(story, value) {
+    if (value === null) return 'No call';
+    return isDial(story) ? formatDial(story, value) : answerWord(value);
+  }
+
+  function gutSentence(story, value) {
+    return value === null ? 'You didn\'t make a gut call' : 'Your gut said ' + callWord(story, value);
   }
 
   function findConfidence(id) {
@@ -107,7 +137,56 @@
     return { gain: difficulty.gain * relevance, loss: difficulty.loss * relevance, difficulty: difficulty.label };
   }
 
+  // How close a dial call is: 1 for a perfect tune, down to 0 at fullCredit away.
+  function accuracy(story, value) {
+    if (value === null) return 0;
+    return Math.max(0, 1 - Math.abs(value - story.answer) / fullCredit(story));
+  }
+
+  // On a dial question, closeness takes the place of right and wrong. The gut
+  // call earns up to its points and never costs any. The final call slides
+  // from the "right" points at a perfect tune to the "wrong" points at
+  // fullCredit away, then the story's weights apply as usual.
+  function scoreDialRound(story) {
+    const conf = findConfidence(state.conf);
+    const weights = storyWeights(story);
+    const gutPoints = Math.round(DATA.gutPoints * accuracy(story, state.gut) * weights.gain);
+    const finalAccuracy = accuracy(story, state.final);
+    const finalBase = conf.right * finalAccuracy + conf.wrong * (1 - finalAccuracy);
+    const finalPoints = Math.round(finalBase * (finalBase >= 0 ? weights.gain : weights.loss));
+
+    const reach = fullCredit(story);
+    const finalMiss = Math.abs(state.final - story.answer);
+    const gutMiss = state.gut === null ? Infinity : Math.abs(state.gut - story.answer);
+
+    let label = 'Dead air';
+    let note = 'Your needle landed far from the real number';
+    if (finalMiss <= reach * 0.08) {
+      label = 'Dialed in';
+      note = 'You tuned right onto the signal';
+    } else if (finalMiss <= reach * 0.25) {
+      label = 'Clear signal';
+      note = 'Just a hair off, a strong read';
+    } else if (finalMiss <= reach * 0.6) {
+      label = 'Picking up';
+      note = 'In the neighborhood, but not on the money';
+    } else if (finalMiss < reach) {
+      label = 'Faint signal';
+      note = 'Close enough for partial credit';
+    }
+    if (state.gut === null) {
+      note = 'The timer ran out on your gut call, so only your final call scored';
+    } else if (finalMiss > gutMiss + reach * 0.15) {
+      note = 'The evidence pulled you away from a better guess';
+    } else if (gutMiss > reach * 0.6 && finalMiss <= reach * 0.25) {
+      note = 'The evidence moved your needle to the right spot';
+    }
+
+    return { gutPoints, finalPoints, total: gutPoints + finalPoints, label, note, difficulty: weights.difficulty };
+  }
+
   function scoreRound(story) {
+    if (isDial(story)) return scoreDialRound(story);
     const gutRight = state.gut === story.answer;
     const finalRight = state.final === story.answer;
     const conf = findConfidence(state.conf);
@@ -161,11 +240,15 @@
       updateTimer(remaining);
       if (remaining > 0) return;
       window.clearInterval(current.tick);
-      document.querySelectorAll('[data-action="gut"]').forEach((button) => { button.disabled = true; });
+      document.querySelectorAll('[data-action="gut"], [data-action="lockGut"]').forEach((button) => { button.disabled = true; });
+      const dial = document.getElementById('gut-dial');
+      if (dial) dial.classList.add('locked');
       current.hold = window.setTimeout(() => {
         if (timer !== current) return;
         stopTimer();
-        go({ gut: null, final: null, screen: 'evidence' });
+        // A dial call keeps wherever the needle was left; a Yes or No needs a tap.
+        const left = isDial(currentStory()) ? state.gut : null;
+        go({ gut: left, final: left, screen: 'evidence' });
       }, OFF_AIR_HOLD_MS);
     }, 50);
   }
@@ -287,8 +370,14 @@
       stopTimer();
       go({ gut: value, final: value, screen: 'evidence' });
     },
+    lockGut() {
+      stopTimer();
+      go({ final: state.gut, screen: 'evidence' });
+    },
     toFinal() {
-      go({ screen: 'final' });
+      // A dial call with no gut guess starts mid-scale; otherwise it starts on the gut call.
+      const story = currentStory();
+      go({ final: isDial(story) && state.final === null ? guessMidpoint(story) : state.final, screen: 'final' });
     },
     final(value) {
       go({ final: value });
@@ -297,7 +386,7 @@
       go({ conf: id });
     },
     lock() {
-      if (!state.final || !state.conf) return;
+      if (state.final === null || !state.conf) return;
       const story = currentStory();
       const round = scoreRound(story);
       go({
@@ -487,6 +576,107 @@
     return `<span class="lcd"><span class="lcd-freq">${esc(freq)}</span><span class="lcd-band">FM</span></span>`;
   }
 
+  // ---------- Guess dial ----------
+
+  // At most 5 gaps between labeled ticks, so the wide pixel font never collides.
+  function guessTicks(story) {
+    const span = story.max - story.min;
+    const step = [1, 2, 5, 10, 20, 25, 50].find((s) => span / s <= 5) || span;
+    const minor = step % 5 === 0 ? step / 5 : step;
+    let html = '';
+    for (let v = story.min; v <= story.max; v += minor) {
+      const left = guessPercent(story, v);
+      const major = (v - story.min) % step === 0;
+      html += `<span class="guess-tick ${major ? 'major' : ''}" style="left: ${left}%"></span>`;
+      if (major) html += `<span class="guess-tick-label" style="left: ${left}%">${v}${esc(story.unit || '')}</span>`;
+    }
+    return html;
+  }
+
+  // The dial a player tunes to a number. value is null until the needle has
+  // been touched. Passing markers makes it a read-only reveal that also shows
+  // where the truth, the crowd and the player landed.
+  function guessDial(story, value, id, markers) {
+    const touched = value !== null;
+    const shown = touched ? value : guessMidpoint(story);
+    const at = guessPercent(story, shown);
+    const tags = (markers || []).map((m) => {
+      const where = guessPercent(story, m.value);
+      const edge = where < 18 ? 'edge-start' : where > 82 ? 'edge-end' : '';
+      return `
+        <span class="guess-marker ${m.kind} ${edge}" style="left: ${where}%"><span class="guess-marker-label">${esc(m.label)}</span></span>`;
+    }).join('');
+    const control = markers
+      ? 'aria-hidden="true"'
+      : `role="slider" tabindex="0" aria-label="${esc(story.question)}" aria-valuemin="${story.min}" aria-valuemax="${story.max}" aria-valuenow="${shown}" aria-valuetext="${esc(formatDial(story, shown))}"`;
+    return `
+      <div class="guess-dial ${touched ? 'touched' : 'untouched'} ${markers ? 'has-markers' : ''}" id="${id}" data-min="${story.min}" data-max="${story.max}" data-value="${shown}" ${control}>
+        <div class="guess-readout"><span class="guess-value">${touched ? shown : '--'}</span><span class="guess-unit">${esc(story.unit || '')}</span></div>
+        <div class="guess-track">
+          <div class="guess-scale">${guessTicks(story)}</div>${tags}
+          <div class="guess-fill" style="width: ${at}%"></div>
+          <div class="guess-needle" style="left: ${at}%"><span class="guess-thumb"></span></div>
+        </div>
+      </div>`;
+  }
+
+  // Dragging or tapping the scale, or the arrow keys, move the needle in place.
+  // Each new value goes to onChange; nothing re-renders, so the timer keeps running.
+  function attachGuessDial(id, onChange) {
+    const dial = document.getElementById(id);
+    if (!dial) return;
+    const min = Number(dial.dataset.min);
+    const max = Number(dial.dataset.max);
+    const track = dial.querySelector('.guess-track');
+    let dragging = false;
+
+    function setValue(raw) {
+      const value = Math.max(min, Math.min(max, Math.round(raw)));
+      const at = ((value - min) / (max - min)) * 100;
+      dial.dataset.value = value;
+      dial.classList.remove('untouched');
+      dial.classList.add('touched');
+      dial.setAttribute('aria-valuenow', value);
+      dial.querySelector('.guess-value').textContent = value;
+      dial.querySelector('.guess-fill').style.width = at + '%';
+      dial.querySelector('.guess-needle').style.left = at + '%';
+      onChange(value);
+    }
+
+    function setFromPointer(event) {
+      const box = track.getBoundingClientRect();
+      const share = Math.max(0, Math.min(1, (event.clientX - box.left) / box.width));
+      setValue(min + share * (max - min));
+    }
+
+    track.addEventListener('pointerdown', (event) => {
+      if (dial.classList.contains('locked')) return;
+      dragging = true;
+      setFromPointer(event);
+      try {
+        track.setPointerCapture(event.pointerId);
+      } catch (err) {
+        // Capture only keeps a drag going outside the scale; the needle still moves without it.
+      }
+    });
+    track.addEventListener('pointermove', (event) => {
+      if (dragging) setFromPointer(event);
+    });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((name) => {
+      track.addEventListener(name, () => { dragging = false; });
+    });
+
+    dial.addEventListener('keydown', (event) => {
+      if (dial.classList.contains('locked')) return;
+      const jump = event.shiftKey ? Math.max(1, Math.round((max - min) / 10)) : 1;
+      const value = Number(dial.dataset.value);
+      const next = { ArrowLeft: value - jump, ArrowDown: value - jump, ArrowRight: value + jump, ArrowUp: value + jump, Home: min, End: max }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      setValue(next);
+    });
+  }
+
   function roundHeader(story) {
     // On the reveal every step is done, so the step bar stays and the radio
     // panel keeps the same height on every screen of a round.
@@ -598,6 +788,21 @@
     return `<p class="setup">${esc(story.setup)}</p>${detail}`;
   }
 
+  // The answer controls under the countdown: the dial and a lock button for a
+  // dial question, or Yes and No buttons. The lock button waits for a first touch.
+  function gutAnswer(story) {
+    if (isDial(story)) {
+      return `
+          ${guessDial(story, state.gut, 'gut-dial')}
+          <button type="button" class="primary" data-action="lockGut" ${state.gut === null ? 'disabled' : ''}>Lock in my gut call</button>`;
+    }
+    return `
+          <div class="choice-row">
+            <button type="button" class="choice" data-action="gut" data-value="no">No</button>
+            <button type="button" class="choice" data-action="gut" data-value="yes">Yes</button>
+          </div>`;
+  }
+
   function gutScreen(story) {
     return `
       <section class="screen">
@@ -613,16 +818,14 @@
         ${story.sample ? '<span class="tag">Sample story</span>' : ''}
         <h2 class="question">${esc(story.question)}</h2>
         ${setupBlock(story)}
+        ${isDial(story) ? '<p class="muted small">Drag the needle along the dial to tune your guess.</p>' : ''}
         <div class="spacer"></div>
         <div class="gut-actions">
           <div class="timer">
             <span>Time left for your gut call</span>
             <span id="time-bar" class="timer-track">${Array.from({ length: DATA.gutSeconds }, (_, i) => `<span class="timer-block ${i < state.timeLeft ? 'on' : ''}"></span>`).join('')}</span>
           </div>
-          <div class="choice-row">
-            <button type="button" class="choice" data-action="gut" data-value="no">No</button>
-            <button type="button" class="choice" data-action="gut" data-value="yes">Yes</button>
-          </div>
+          ${gutAnswer(story)}
         </div>
       </section>`;
   }
@@ -636,7 +839,7 @@
       <section class="screen">
         <div class="question-row">
           <span>${esc(story.question)}</span>
-          <span class="nowrap">${gutSentence(state.gut)}</span>
+          <span class="nowrap">${gutSentence(story, state.gut)}</span>
         </div>
         <div class="evidence-card">
           <span class="scope">New evidence</span>
@@ -652,12 +855,12 @@
   function finalScreen(story) {
     const pick = (value) => `
       <button type="button" class="choice ${state.final === value ? 'selected' : ''}" aria-pressed="${state.final === value}" data-action="final" data-value="${value}">${answerWord(value)}</button>`;
-    const ready = state.final && state.conf;
+    const ready = state.final !== null && state.conf;
     return `
       <section class="screen">
         <h2 class="question">${esc(story.question)}</h2>
-        <p class="muted small">${gutSentence(state.gut)}</p>
-        <div class="choice-row">${pick('no')}${pick('yes')}</div>
+        <p class="muted small">${gutSentence(story, state.gut)}</p>
+        ${isDial(story) ? guessDial(story, state.final, 'final-dial') : `<div class="choice-row">${pick('no')}${pick('yes')}</div>`}
         <span class="label">How confident are you?</span>
         <div class="confidence-list">
           ${DATA.confidence.map((c, i) => `
@@ -670,9 +873,20 @@
       </section>`;
   }
 
+  // Truth above the scale; the crowd and the player below it.
+  function revealMarkers(story) {
+    const markers = [{ kind: 'truth', value: story.answer, label: 'Truth ' + formatDial(story, story.answer) }];
+    if (typeof story.sampleCrowdGuess === 'number') {
+      markers.push({ kind: 'crowd', value: story.sampleCrowdGuess, label: 'Crowd ' + formatDial(story, story.sampleCrowdGuess) });
+    }
+    if (state.final !== null) {
+      markers.push({ kind: 'you', value: state.final, label: 'You ' + formatDial(story, state.final) });
+    }
+    return markers;
+  }
+
   function revealScreen(story) {
     const round = state.lastRound;
-    const crowdYes = Math.round(story.sampleCrowdYes * 100);
     const conf = findConfidence(state.conf);
     return `
       <section class="screen reveal">
@@ -681,18 +895,19 @@
           <span class="points ${round.total >= 0 ? 'pos' : 'neg'}">${signed(round.total)}</span>
         </div>
         <p class="muted small">${esc(round.note)}</p>
+        ${isDial(story) ? guessDial(story, state.final, 'reveal-dial', revealMarkers(story)) : ''}
         <div class="card">
           <span class="scope">What happened</span>
           <span class="outcome">${esc(story.outcome)}</span>
         </div>
         <dl class="breakdown">
-          <div><dt>Gut call: ${answerWord(state.gut)}</dt><dd>${signed(round.gutPoints)}</dd></div>
-          <div><dt>Final call: ${answerWord(state.final)}, ${conf.label}</dt><dd>${signed(round.finalPoints)}</dd></div>
+          <div><dt>Gut call: ${esc(callWord(story, state.gut))}</dt><dd>${signed(round.gutPoints)}</dd></div>
+          <div><dt>Final call: ${esc(callWord(story, state.final))}, ${conf.label}</dt><dd>${signed(round.finalPoints)}</dd></div>
           <div class="breakdown-total"><dt>Round total</dt><dd>${signed(round.total)}</dd></div>
         </dl>
         <p class="muted small">${esc(round.difficulty)} story, ${esc(story.scopeLabel)}</p>
         <hr>
-        <p class="small strong">${crowdYes}% of the sample crowd said Yes</p>
+        ${isDial(story) ? '' : `<p class="small strong">${Math.round(story.sampleCrowdYes * 100)}% of the sample crowd said Yes</p>`}
         <p class="small">${esc(story.why)}</p>
         <div class="spacer"></div>
         <button type="button" class="primary" data-action="next">${state.idx < DATA.stories.length - 1 ? 'Next story' : 'See my results'}</button>
@@ -797,6 +1012,16 @@
     app.dataset.station = inRound ? story.frequency + ' FM' : DATA.city;
     window.scrollTo(0, 0);
     drawWave();
+    if (state.screen === 'gut' && isDial(story)) {
+      attachGuessDial('gut-dial', (value) => {
+        state.gut = value;
+        state.final = value;
+        document.querySelector('[data-action="lockGut"]').disabled = false;
+      });
+    }
+    if (state.screen === 'final' && isDial(story)) {
+      attachGuessDial('final-dial', (value) => { state.final = value; });
+    }
   }
 
   // ---------- Radio wave ----------
