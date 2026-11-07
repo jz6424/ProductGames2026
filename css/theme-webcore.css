@@ -463,6 +463,37 @@ html[data-theme="webcore"] .intro-steps strong { font-weight: 700; }
 html[data-theme="webcore"] .intro-steps li::marker { font-size: 11px; color: #000080; }
 html[data-theme="webcore"] .intro .muted { color: #1a1a1a; }
 html[data-theme="webcore"] .intro::backdrop { background: rgba(0, 64, 64, 0.6); }
+/* How to play sections as retro group boxes: etched border, navy caption */
+html[data-theme="webcore"] .intro-section {
+  padding: 10px 12px;
+  border: 1px solid #808080;
+  border-radius: 0;
+  box-shadow: 1px 1px 0 #ffffff, inset 1px 1px 0 #ffffff;
+  gap: 8px;
+}
+html[data-theme="webcore"] .intro-heading { font-size: 9px; line-height: 12px; color: #000080; }
+html[data-theme="webcore"] .intro-section .intro-steps { gap: 6px; font-size: 11px; line-height: 16px; }
+html[data-theme="webcore"] .intro-chips { font-size: 11px; line-height: 16px; }
+html[data-theme="webcore"] .intro-chip {
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+  font-size: 9px;
+  line-height: 12px;
+}
+html[data-theme="webcore"] .intro-kind {
+  padding: 8px;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: var(--bevel-in);
+  font-size: 10px;
+  line-height: 14px;
+  color: #000000;
+}
+html[data-theme="webcore"] .intro-kind strong { color: #000080; font-weight: 400; }
+html[data-theme="webcore"] .intro-scoring { font-size: 10px; line-height: 15px; color: #000000; }
 /* Room for the wide pixel numbers so they stay inside the dialog */
 html[data-theme="webcore"] .intro-steps { padding-left: 36px; gap: 12px; }
 html[data-theme="webcore"] .intro-steps li { padding-left: 4px; }

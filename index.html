@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
   <!-- Bump ?v= whenever a file changes, so browsers skip their cached copy. -->
-  <link rel="stylesheet" href="css/styles.css?v=49">
-  <link rel="stylesheet" href="css/intro.css?v=49">
-  <link rel="stylesheet" href="css/theme-webcore.css?v=49">
-  <script src="js/theme.js?v=49"></script>
+  <link rel="stylesheet" href="css/styles.css?v=50">
+  <link rel="stylesheet" href="css/intro.css?v=50">
+  <link rel="stylesheet" href="css/theme-webcore.css?v=50">
+  <script src="js/theme.js?v=50"></script>
 </head>
 <body>
   <main id="app" class="phone" aria-live="polite"></main>
@@ -22,22 +22,42 @@
   <dialog id="intro" class="intro" aria-labelledby="intro-title">
     <span class="scope">Static</span>
     <h2 id="intro-title">How to play</h2>
-    <p class="muted">You'll play five stories: two local stories from your city, two national stories and a global story. Each one has five steps.</p>
-    <ol class="intro-steps">
-      <li><strong>Read the headline.</strong> Each story starts with a short setup and a question. It is either a Yes or No question, or a dial question that asks for a number.</li>
-      <li><strong>Choose your gut reaction.</strong> Answer Yes or No, or drag the needle on the dial to your best guess, within 20 seconds.</li>
-      <li><strong>Get more information.</strong> See one new piece of evidence about the story.</li>
-      <li><strong>Keep or change your decision.</strong> Then choose your confidence: Leaning, Confident or Certain.</li>
-      <li><strong>See what happened.</strong> Find out the real outcome and your score right away.</li>
-    </ol>
-    <p class="muted small">More confidence earns more points if you're right, and costs more if you're wrong. On a dial question, the closer your needle lands, the more you earn. Local stories and harder stories are worth more.</p>
+    <section class="intro-section" aria-labelledby="intro-today">
+      <h3 id="intro-today" class="intro-heading">Today's broadcast</h3>
+      <p class="intro-chips">Five stories: <span class="intro-chip">2 local</span> <span class="intro-chip">2 national</span> <span class="intro-chip">1 global</span></p>
+    </section>
+    <section class="intro-section" aria-labelledby="intro-story">
+      <h3 id="intro-story" class="intro-heading">Each story</h3>
+      <ol class="intro-steps">
+        <li><strong>Read</strong> the question and a short setup</li>
+        <li><strong>Gut call</strong> within 20 seconds</li>
+        <li><strong>Evidence</strong> gives you one new clue</li>
+        <li><strong>Final call</strong>: keep or change it, then pick your confidence</li>
+        <li><strong>Reveal</strong> the real outcome and your score</li>
+      </ol>
+    </section>
+    <section class="intro-section" aria-labelledby="intro-kinds">
+      <h3 id="intro-kinds" class="intro-heading">Two kinds of questions</h3>
+      <div class="intro-kinds">
+        <div class="intro-kind"><strong>Yes or No</strong><span>Tap your answer</span></div>
+        <div class="intro-kind"><strong>Dial</strong><span>Drag the needle to a number</span></div>
+      </div>
+    </section>
+    <section class="intro-section" aria-labelledby="intro-scoring">
+      <h3 id="intro-scoring" class="intro-heading">Scoring</h3>
+      <ul class="intro-scoring">
+        <li>Higher confidence wins more if you're right and loses more if you're wrong</li>
+        <li>On a dial, the closer you land, the more you earn</li>
+        <li>Local and harder stories are worth more</li>
+      </ul>
+    </section>
     <form method="dialog">
       <button type="submit" class="primary intro-close">Got it</button>
     </form>
   </dialog>
 
-  <script src="js/data.js?v=49"></script>
-  <script src="js/game.js?v=49"></script>
-  <script src="js/intro.js?v=49"></script>
+  <script src="js/data.js?v=50"></script>
+  <script src="js/game.js?v=50"></script>
+  <script src="js/intro.js?v=50"></script>
 </body>
 </html>
