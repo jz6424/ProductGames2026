@@ -453,7 +453,9 @@
   // Reopens the How to play guide that shows when the site first loads.
   function openIntro() {
     const intro = document.getElementById('intro');
-    if (!intro || intro.open) return;
+    if (!intro || (intro.open && !intro.classList.contains('closing'))) return;
+    intro.classList.remove('closing');
+    if (intro.open) return;
     if (typeof intro.showModal === 'function') intro.showModal();
     else intro.setAttribute('open', '');
   }
@@ -502,9 +504,42 @@
     else cityMenu.setAttribute('open', '');
   }
 
+  // Closes a pop-up window, letting it shrink and fade out first. The
+  // .closing class runs the exit animation in the CSS.
+  const DIALOG_EXIT_MS = 180;
+  function closeDialog(dialog) {
+    if (!dialog || !dialog.hasAttribute('open') || dialog.classList.contains('closing')) return;
+    const finish = () => {
+      dialog.classList.remove('closing');
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+    };
+    if (reduceMotion) {
+      finish();
+      return;
+    }
+    dialog.classList.add('closing');
+    window.setTimeout(finish, DIALOG_EXIT_MS);
+  }
+
   function closeCityMenu() {
-    if (typeof cityMenu.close === 'function') cityMenu.close();
-    else cityMenu.removeAttribute('open');
+    closeDialog(cityMenu);
+  }
+
+  // Escape and the How to play "Got it" button close with the same animation.
+  const introDialog = document.getElementById('intro');
+  [cityMenu, introDialog].forEach((dialog) => {
+    if (!dialog) return;
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeDialog(dialog);
+    });
+  });
+  if (introDialog) {
+    introDialog.querySelector('form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      closeDialog(introDialog);
+    });
   }
 
   // Switching cities starts a fresh game with that city's local stories.
@@ -535,11 +570,14 @@
     }
     if (choose) chooseCity(choose.dataset.cityChoose);
     if (close) closeCityMenu();
+    const closeOther = event.target.closest('[data-dialog-close]');
+    if (closeOther) closeDialog(closeOther.closest('dialog'));
     // A click on the dimmed backdrop lands on the dialog itself, outside its box.
-    if (event.target === cityMenu) {
-      const box = cityMenu.getBoundingClientRect();
+    const dialog = event.target;
+    if (dialog === cityMenu || dialog === introDialog) {
+      const box = dialog.getBoundingClientRect();
       const outside = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
-      if (outside) closeCityMenu();
+      if (outside) closeDialog(dialog);
     }
   });
 

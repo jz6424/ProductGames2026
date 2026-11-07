@@ -1014,8 +1014,9 @@ a.source-link:hover { background: var(--raised); }
 .city-menu::backdrop { background: rgba(18, 17, 15, 0.8); }
 .city-menu { position: fixed; }
 .city-menu-title { font-size: 22px; line-height: 1.2; padding-right: 40px; }
-/* Close button in the menu's corner (webcore restyles it as a title-bar box) */
-.city-menu .menu-close {
+/* Close button in a pop-up's corner (webcore restyles it as a title-bar box) */
+.city-menu .menu-close,
+.intro .menu-close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -1117,4 +1118,20 @@ a.source-link:hover { background: var(--raised); }
   .result-row { animation: row-in 320ms var(--ease) both; animation-delay: calc(var(--i, 0) * 80ms + 150ms); }
   .bar { transform-origin: bottom; animation: bar-grow 520ms var(--ease) both; animation-delay: calc(var(--i, 0) * 45ms + 350ms); }
   .bin.you .you-label { animation: pop-in 400ms var(--ease) 950ms both; }
+}
+
+/* ---------- Pop-up windows ---------- */
+
+/* The How to play guide and the city menu grow in from slightly small and
+   shrink back out when closed, with the dimmed backdrop fading alongside. */
+@keyframes dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.96); } }
+@keyframes dialog-out { to { opacity: 0; transform: translateY(6px) scale(0.96); } }
+@keyframes backdrop-in { from { opacity: 0; } }
+@keyframes backdrop-out { to { opacity: 0; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro[open], .city-menu[open] { animation: dialog-in 220ms var(--ease) both; }
+  .intro[open]::backdrop, .city-menu[open]::backdrop { animation: backdrop-in 220ms var(--ease) both; }
+  .intro.closing, .city-menu.closing { animation: dialog-out 180ms ease-in forwards; pointer-events: none; }
+  .intro.closing::backdrop, .city-menu.closing::backdrop { animation: backdrop-out 180ms ease-in forwards; }
 }
