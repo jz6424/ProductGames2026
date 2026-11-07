@@ -134,13 +134,67 @@
     return timeLeft <= 2 ? 'fast' : 'slow';
   }
 
+  // ---------- Flip clock ----------
+
+  function clockDigits(seconds) {
+    const text = String(Math.max(0, seconds)).padStart(2, '0');
+    return [text[0], text[1]];
+  }
+
+  function flipCard(digit) {
+    return `<span class="flip-card" data-digit="${digit}"><span class="flip-half flip-top"><span>${digit}</span></span><span class="flip-half flip-bottom"><span>${digit}</span></span></span>`;
+  }
+
+  function flipLeaf(half, digit) {
+    const leaf = document.createElement('span');
+    leaf.className = 'flip-half flip-leaf flip-' + half;
+    const face = document.createElement('span');
+    face.textContent = digit;
+    leaf.appendChild(face);
+    return leaf;
+  }
+
+  // Split-flap flip: the old top half folds down, then the new bottom half
+  // falls into place. The still halves underneath already show the new top
+  // and the old bottom, so nothing jumps.
+  function flipTo(card, digit) {
+    const old = card.dataset.digit;
+    if (old === digit) return;
+    card.dataset.digit = digit;
+    card.querySelectorAll('.flip-leaf').forEach((leaf) => leaf.remove());
+    const top = card.querySelector('.flip-top > span');
+    const bottom = card.querySelector('.flip-bottom > span');
+    top.textContent = digit;
+    if (reduceMotion || typeof card.animate !== 'function') {
+      bottom.textContent = digit;
+      return;
+    }
+    bottom.textContent = old;
+    const fold = flipLeaf('top', old);
+    const fall = flipLeaf('bottom', digit);
+    fall.style.transform = 'rotateX(90deg)';
+    card.append(fold, fall);
+    fold.animate([{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(-90deg)' }], { duration: 160, easing: 'ease-in', fill: 'forwards' });
+    const drop = fall.animate([{ transform: 'rotateX(90deg)' }, { transform: 'rotateX(0deg)' }], { duration: 160, delay: 160, easing: 'ease-out', fill: 'forwards' });
+    drop.onfinish = () => {
+      bottom.textContent = digit;
+      fold.remove();
+      fall.remove();
+    };
+  }
+
   function updateTimer(remaining, duration) {
     state.timeLeft = Math.ceil(remaining / 1000);
     const count = document.getElementById('time-left');
+    const clock = document.getElementById('flip-clock');
     const bar = document.getElementById('time-bar');
     const sign = document.getElementById('on-air');
     const label = document.getElementById('on-air-label');
     if (count) count.textContent = String(state.timeLeft);
+    if (clock) {
+      const digits = clockDigits(state.timeLeft);
+      clock.querySelectorAll('.flip-card').forEach((card, i) => flipTo(card, digits[i]));
+    }
     if (bar) bar.style.transform = 'scaleX(' + remaining / duration + ')';
     if (sign) {
       const status = onAirState(state.timeLeft);
@@ -332,7 +386,11 @@
       <section class="screen">
         <div id="on-air" class="on-air" data-state="${onAirState(state.timeLeft)}" data-flicker="${onAirFlicker(state.timeLeft)}" role="timer" aria-label="Seconds left for your gut call">
           <span class="neon-sign"><span id="on-air-label" class="neon-text" aria-label="On air">On air</span></span>
-          <span class="on-air-count"><strong id="time-left">${state.timeLeft}</strong><span class="on-air-unit">s</span></span>
+          <span class="on-air-count">
+            <span id="flip-clock" class="flip-clock" aria-hidden="true">${clockDigits(state.timeLeft).map(flipCard).join('')}</span>
+            <span class="on-air-unit" aria-hidden="true">sec</span>
+            <span id="time-left" class="sr-only">${state.timeLeft}</span>
+          </span>
         </div>
         ${story.sample ? '<span class="tag">Sample story</span>' : ''}
         <p class="setup">${esc(story.setup)}</p>
