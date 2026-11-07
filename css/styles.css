@@ -555,6 +555,9 @@ a.source-link:hover { background: var(--raised); }
   .on-air[data-state="warning"] .neon-sign { opacity: 0.7; }
 }
 
+/* The digital readout belongs to the webcore theme; the dark look uses flip cards */
+.digital-clock { display: none; }
+
 /* Split-flap flip clock next to the neon sign */
 .flip-clock { display: inline-flex; gap: 4px; }
 .on-air-count { gap: 8px; align-items: center; }

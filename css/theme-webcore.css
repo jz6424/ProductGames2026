@@ -247,6 +247,64 @@ html[data-theme="webcore"] .timer-track {
 html[data-theme="webcore"] .timer-block { border-radius: 0; background: transparent; }
 html[data-theme="webcore"] .timer-block.on { background: #000080; }
 
+/* ---------- Countdown: flat ON AIR light and a digital LCD clock ---------- */
+
+/* The ON AIR sign is a plain red studio light here: no neon glow, no flicker */
+html[data-theme="webcore"] .neon-sign {
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 0;
+  background: #b00000;
+  box-shadow: inset -1px -1px #3d0000, inset 1px 1px #ff8a8a, inset -2px -2px #700000, inset 2px 2px #e04848;
+  animation: none;
+}
+html[data-theme="webcore"] .on-air[data-flicker] .neon-sign { animation: none; opacity: 1; }
+html[data-theme="webcore"] .neon-text {
+  font-family: var(--font-title);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #3d0000;
+}
+/* Off air: the light switches off and looks like a greyed-out button */
+html[data-theme="webcore"] .on-air[data-state="off"] .neon-sign {
+  background: #c0c0c0;
+  box-shadow: var(--bevel-out);
+}
+html[data-theme="webcore"] .on-air[data-state="off"] .neon-text {
+  color: #808080;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+
+/* Digital clock replaces the flip cards */
+html[data-theme="webcore"] .flip-clock,
+html[data-theme="webcore"] .on-air-unit { display: none; }
+html[data-theme="webcore"] .digital-clock {
+  position: relative;
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--lcd-bg);
+  box-shadow: var(--bevel-in);
+  color: var(--lcd-ink);
+  font-family: var(--font-lcd);
+  font-size: 44px;
+  line-height: 40px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+/* Faint unlit segments behind the digits, like a real LCD */
+html[data-theme="webcore"] .digital-clock::before {
+  content: "88:88";
+  position: absolute;
+  inset: 4px 12px;
+  color: rgba(51, 255, 102, 0.1);
+}
+html[data-theme="webcore"] .on-air[data-state="warning"] .digital-clock { color: #ff4d4d; }
+html[data-theme="webcore"] .on-air[data-state="warning"] .digital-clock::before { color: rgba(255, 77, 77, 0.12); }
+html[data-theme="webcore"] .on-air[data-state="off"] .digital-clock { color: #1f6b33; }
+
 /* ---------- Reveal and results ---------- */
 
 html[data-theme="webcore"] .points { font-family: var(--font-title); font-weight: 700; }

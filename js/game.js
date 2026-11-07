@@ -134,11 +134,16 @@
     return timeLeft <= 2 ? 'fast' : 'slow';
   }
 
-  // ---------- Flip clock ----------
+  // ---------- Countdown clocks ----------
 
   function clockDigits(seconds) {
     const text = String(Math.max(0, seconds)).padStart(2, '0');
     return [text[0], text[1]];
+  }
+
+  // Digital readout used by the webcore theme, e.g. "00:20".
+  function digitalTime(seconds) {
+    return '00:' + clockDigits(seconds).join('');
   }
 
   function flipCard(digit) {
@@ -191,6 +196,8 @@
     const sign = document.getElementById('on-air');
     const label = document.getElementById('on-air-label');
     if (count) count.textContent = String(state.timeLeft);
+    const digital = document.getElementById('digital-clock');
+    if (digital) digital.textContent = digitalTime(state.timeLeft);
     if (clock) {
       const digits = clockDigits(state.timeLeft);
       clock.querySelectorAll('.flip-card').forEach((card, i) => flipTo(card, digits[i]));
@@ -392,6 +399,7 @@
         <div id="on-air" class="on-air" data-state="${onAirState(state.timeLeft)}" data-flicker="${onAirFlicker(state.timeLeft)}" role="timer" aria-label="Seconds left for your gut call">
           <span class="neon-sign"><span id="on-air-label" class="neon-text" aria-label="On air">On air</span></span>
           <span class="on-air-count">
+            <span id="digital-clock" class="digital-clock" aria-hidden="true">${digitalTime(state.timeLeft)}</span>
             <span id="flip-clock" class="flip-clock" aria-hidden="true">${clockDigits(state.timeLeft).map(flipCard).join('')}</span>
             <span class="on-air-unit" aria-hidden="true">sec</span>
             <span id="time-left" class="sr-only">${state.timeLeft}</span>
