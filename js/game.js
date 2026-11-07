@@ -443,7 +443,16 @@
     taskbar.innerHTML = `
       <span class="taskbar-brand">Static</span>
       <span class="taskbar-divider" aria-hidden="true"></span>
-      <button type="button" class="taskbar-city" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>`;
+      <button type="button" class="taskbar-city" data-city-menu aria-haspopup="dialog">${pinIcon()}<span>${esc(DATA.city)}</span></button>
+      <button type="button" class="taskbar-city taskbar-help" data-open-intro aria-haspopup="dialog"><span class="help-icon" aria-hidden="true">?</span><span>How to play</span></button>`;
+  }
+
+  // Reopens the How to play guide that shows when the site first loads.
+  function openIntro() {
+    const intro = document.getElementById('intro');
+    if (!intro || intro.open) return;
+    if (typeof intro.showModal === 'function') intro.showModal();
+    else intro.setAttribute('open', '');
   }
 
   // Cities on the left; the previewed city's top five local stories on the
@@ -511,6 +520,7 @@
   }
 
   document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-open-intro]')) openIntro();
     const opener = event.target.closest('[data-city-menu]');
     const preview = event.target.closest('[data-city-preview]');
     const choose = event.target.closest('[data-city-choose]');

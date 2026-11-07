@@ -644,6 +644,18 @@ html[data-theme="webcore"] .city-button .pin { width: 15px; height: 18px; }
     font: 12px/1 var(--font-body);
     cursor: pointer;
   }
+  /* How to play sits at the far right of the taskbar */
+  html[data-theme="webcore"] .taskbar-help { margin-left: auto; }
+  html[data-theme="webcore"] .help-icon {
+    width: 16px;
+    height: 16px;
+    display: grid;
+    place-items: center;
+    background: #000080;
+    color: #ffffff;
+    box-shadow: inset -1px -1px 0 #00004a, inset 1px 1px 0 #4a6cff;
+    font: 700 11px/1 var(--font-body);
+  }
   html[data-theme="webcore"] .taskbar-city:active,
   html[data-theme="webcore"] .taskbar-city[aria-expanded="true"] { box-shadow: var(--bevel-in); }
 }
