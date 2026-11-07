@@ -127,6 +127,49 @@ html[data-theme="webcore"] .brand {
 }
 html[data-theme="webcore"] .city { font-size: 13px; font-weight: 700; color: #000080; }
 
+/* ---------- 3D headers ---------- */
+
+/* Extruded, WordArt-style headings: a bright face, a white highlight on the
+   top-left edge, solid navy layers stepping down-right for depth, then a
+   soft drop shadow. Bigger headings get a deeper extrusion. */
+html[data-theme="webcore"] {
+  --extrude: #00005a;
+  --face: #1f4fff;
+}
+html[data-theme="webcore"] .home h1 {
+  color: var(--face);
+  text-shadow:
+    -1px -1px 0 #ffffff,
+    1px 1px 0 var(--extrude),
+    2px 2px 0 var(--extrude),
+    3px 3px 0 var(--extrude),
+    4px 4px 0 var(--extrude),
+    6px 6px 4px rgba(0, 0, 0, 0.35);
+}
+html[data-theme="webcore"] .reveal-head h2 {
+  color: var(--face);
+  text-shadow:
+    -1px -1px 0 #ffffff,
+    1px 1px 0 var(--extrude),
+    2px 2px 0 var(--extrude),
+    3px 3px 0 var(--extrude),
+    5px 5px 3px rgba(0, 0, 0, 0.3);
+}
+html[data-theme="webcore"] .question,
+html[data-theme="webcore"] .learn h2 {
+  color: var(--face);
+  text-shadow:
+    -1px -1px 0 #ffffff,
+    1px 1px 0 var(--extrude),
+    2px 2px 0 var(--extrude),
+    3px 3px 2px rgba(0, 0, 0, 0.3);
+}
+/* The rainbow logo is clipped to its letters, so it gets its depth from a
+   stacked drop shadow instead of text-shadow */
+html[data-theme="webcore"] .brand {
+  filter: drop-shadow(1px 1px 0 var(--extrude)) drop-shadow(1px 1px 0 var(--extrude)) drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.35));
+}
+
 /* ---------- Raised buttons ---------- */
 
 html[data-theme="webcore"] .primary,
