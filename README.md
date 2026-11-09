@@ -1,4 +1,4 @@
-# Static
+# Static - 2nd Place @ UW Product Games
 
 A daily news game prototype for the "Reimagining News for Gen Z" challenge. Players read a short story card, make a quick gut call, see one new piece of evidence, then lock in a final call with a confidence level. A story is either a Yes or No question or a dial question, where the player tunes a radio needle to a number. They get their score right away.
 
